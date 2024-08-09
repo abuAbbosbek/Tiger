@@ -251,3 +251,28 @@ export const ImportData = [
         status: "Yakunlandi",
     },
 ];
+
+
+export const CustomerDebtsData = [
+    {
+        id: 1,
+        amount: "430 000 UZS",
+        date: "gacha 18.07.2024",
+        name: "JURAT OGA USTO",
+        store: "Store Avtodisk",
+    },
+    {
+        id: 2,
+        amount: "180 000 UZS",
+        date: "gacha 19.07.2024",
+        name: "JURAT OGA USTO",
+        store: "Store Avtodisk",
+    },
+    {
+        id: 3,
+        amount: "30 000 UZS",
+        date: "gacha 20.07.2024",
+        name: "ZOXID",
+        store: "Store Avtodisk",
+    },
+];

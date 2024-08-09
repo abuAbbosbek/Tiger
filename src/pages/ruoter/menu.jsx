@@ -12,6 +12,7 @@ import CustomerDebts from "../mijozlar/mijozlarqarzlari";
 import WriteOff from "../goods/writeoff";
 import Katalog from "../goods/katalog";
 import Import from "../goods/import";
+import CustomerGroup from "../mijozlar/mijozlarguruhi";
 
 const MenuList = [
     {
@@ -95,7 +96,8 @@ const MenuList = [
             {
                 id: 19,
                 title: "Mijozlar guruhi",
-                path: "/",
+                path: "/customersgroup",
+                element: <CustomerGroup />,
             },
             {
                 id: 20,

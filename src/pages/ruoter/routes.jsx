@@ -3,6 +3,7 @@ import Katalog from "../goods/katalog";
 import WriteOff from "../goods/writeoff";
 import ShopChildreanPage from "../hisobotlar/children/shop";
 import Customers from "../mijozlar/mijozlar";
+import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import CustomerDebts from "../mijozlar/mijozlarqarzlari";
 
 export const menu = [
@@ -36,4 +37,9 @@ export const menu = [
         path: "/import",
         element: < Import />,
     },
+    {
+        id: 7,
+        path: "/customersgroup",
+        element: <CustomerGroup/>,
+    }
 ];
