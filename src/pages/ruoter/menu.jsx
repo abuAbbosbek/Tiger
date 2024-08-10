@@ -13,6 +13,7 @@ import WriteOff from "../goods/writeoff";
 import Katalog from "../goods/katalog";
 import Import from "../goods/import";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
+import NewSales from "../sales/newsales";
 
 const MenuList = [
     {
@@ -73,7 +74,8 @@ const MenuList = [
             {
                 id: 16,
                 title: "Yangi sotuvlar",
-                path: "/yangisotuvlar",
+                path: "/newsales",
+                element: <NewSales />,
             },
             {
                 id: 17,

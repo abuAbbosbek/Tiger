@@ -5,6 +5,7 @@ import ShopChildreanPage from "../hisobotlar/children/shop";
 import Customers from "../mijozlar/mijozlar";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import CustomerDebts from "../mijozlar/mijozlarqarzlari";
+import NewSales from "../sales/newsales";
 
 export const menu = [
     {
@@ -35,11 +36,16 @@ export const menu = [
     {
         id: 6,
         path: "/import",
-        element: < Import />,
+        element: <Import />,
     },
     {
         id: 7,
         path: "/customersgroup",
-        element: <CustomerGroup/>,
-    }
+        element: <CustomerGroup />,
+    },
+    {
+        id: 8,
+        path: "/newsales",
+        element: < NewSales />,
+    },
 ];

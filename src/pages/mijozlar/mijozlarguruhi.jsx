@@ -7,7 +7,6 @@ import {
 import { useEffect, useState } from "react";
 
 const CustomerGroup = () => {
-
     const [currentDateTime, setCurrentDateTime] = useState("");
 
     useEffect(() => {
@@ -31,14 +30,13 @@ const CustomerGroup = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-
     return (
         <div className='flex'>
             <div className='w-7/10 p-2 m-2 '>
                 <div className='flex justify-between mb-10'>
                     <div className='flex items-center'>
                         <h1 className='text-4xl mr-2'>Barcha sotuvlar</h1>
-                        <h1 className='rounded-full bg-slate-300 text-sky-500 p-2 w-10 h-10 text-xl text-center'>
+                        <h1 className='rounded-full bg-slate-300 text-sky-500 px-2 py-1.5 text-xl text-center'>
                             26
                         </h1>
                     </div>
@@ -67,31 +65,94 @@ const CustomerGroup = () => {
                     </div>
                 </div>
 
-
-                <div className='w-full'>
-                    <div className='bg-white p-4 rounded-lg shadow-md flex justify-between items-center w-full border-2'>
-                        <div className='flex items-center space-x-4'>
-                            <span className='bg-blue-100 text-blue-600 px-2 py-1 rounded-md'>
-                                1 dona
-                            </span>
-                            <div>
-                                <p className='text-gray-700 font-semibold'>
-                                    Sotuv #809604
+                <div className="">
+                    <div className='w-full mb-5'>
+                        <div className='bg-white p-4 rounded-lg shadow-md flex justify-between items-center w-full border-2'>
+                            <div className='flex items-center space-x-4'>
+                                <span className='bg-blue-100 text-blue-600 px-2 py-1 rounded-md'>
+                                    1 dona
+                                </span>
+                                <div>
+                                    <p className='text-gray-700 font-semibold'>
+                                        Sotuv #809604
+                                    </p>
+                                    <p className='text-gray-500 text-sm'>
+                                        17.07.2024 | 15:50:12
+                                    </p>
+                                    <button className='bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-sm mt-2'>
+                                        Keshbek yo`q
+                                    </button>
+                                </div>
+                            </div>
+                            <div className='text-right'>
+                                <p className='text-red-500 font-bold'>
+                                    35 000 UZS
                                 </p>
-                                <p className='text-gray-500 text-sm'>
-                                    17.07.2024 | 15:50:12
+                                <p className='text-gray-600 flex items-center'>
+                                    <span className='w-2.5 h-2.5 bg-blue-600 rounded-full mr-2'></span>
+                                    Store Avtodisk
                                 </p>
-                                <button className='bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-sm mt-2'>
-                                    Keshbek yo`q
-                                </button>
                             </div>
                         </div>
-                        <div className='text-right'>
-                            <p className='text-red-500 font-bold'>35 000 UZS</p>
-                            <p className='text-gray-600 flex items-center'>
-                                <span className='w-2.5 h-2.5 bg-blue-600 rounded-full mr-2'></span>
-                                Store Avtodisk
-                            </p>
+                    </div>
+
+                    <div className='w-full mb-5'>
+                        <div className='bg-white p-4 rounded-lg shadow-md flex justify-between items-center w-full border-2'>
+                            <div className='flex items-center space-x-4'>
+                                <span className='bg-blue-100 text-blue-600 px-2 py-1 rounded-md'>
+                                    1 dona
+                                </span>
+                                <div>
+                                    <p className='text-gray-700 font-semibold'>
+                                        Sotuv #809604
+                                    </p>
+                                    <p className='text-gray-500 text-sm'>
+                                        17.07.2024 | 15:50:12
+                                    </p>
+                                    <button className='bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-sm mt-2'>
+                                        Keshbek yo`q
+                                    </button>
+                                </div>
+                            </div>
+                            <div className='text-right'>
+                                <p className='text-red-500 font-bold'>
+                                    35 000 UZS
+                                </p>
+                                <p className='text-gray-600 flex items-center'>
+                                    <span className='w-2.5 h-2.5 bg-blue-600 rounded-full mr-2'></span>
+                                    Store Avtodisk
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='w-full mb-5'>
+                        <div className='bg-white p-4 rounded-lg shadow-md flex justify-between items-center w-full border-2'>
+                            <div className='flex items-center space-x-4'>
+                                <span className='bg-blue-100 text-blue-600 px-2 py-1 rounded-md'>
+                                    1 dona
+                                </span>
+                                <div>
+                                    <p className='text-gray-700 font-semibold'>
+                                        Sotuv #809604
+                                    </p>
+                                    <p className='text-gray-500 text-sm'>
+                                        17.07.2024 | 15:50:12
+                                    </p>
+                                    <button className='bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-sm mt-2'>
+                                        Keshbek yo`q
+                                    </button>
+                                </div>
+                            </div>
+                            <div className='text-right'>
+                                <p className='text-red-500 font-bold'>
+                                    35 000 UZS
+                                </p>
+                                <p className='text-gray-600 flex items-center'>
+                                    <span className='w-2.5 h-2.5 bg-blue-600 rounded-full mr-2'></span>
+                                    Store Avtodisk
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,16 +163,16 @@ const CustomerGroup = () => {
             <div className='w-3/10 p-4 m-2'>
                 <div className='bg-blue-500 rounded-xl p-5 text-xl text-center mb-10 '>
                     <button>
-                        Ommaviy qutirish <RightOutlined />{" "}
+                        Hisobotni chop etish <RightOutlined />{" "}
                     </button>
                 </div>
 
                 <div className='bg-white rounded-xl px-4 py-4 mt-4 shadow-md border-2 '>
                     <div className='flex justify-between mb-10'>
                         <div>
-                            <h1 className='text-xl mb-2'>Qarzlar summasi</h1>
+                            <h1 className='text-xl mb-2'>Tranzaksiyalar</h1>
                             <h1 className='text-xl text-sky-600'>
-                                8 737 000 UZS
+                                26 <span className='text-black'>dona</span>
                             </h1>
                         </div>
                         <div>
@@ -126,16 +187,40 @@ const CustomerGroup = () => {
                     <div className='mt-10'>
                         <div className='flex justify-between'>
                             <h1 className='text-xl mb-4 w-52'>
-                                Qoplangan qarzlar summasi
+                                Tovarlar <p className='text-sky-600'>41 dona</p>
                             </h1>
-                            <h1 className='text-xl text-blue-500'>
-                                730 000 UZS
+                            <h1 className='text-xl w-32'>
+                                Xizmatlar <p className='text-sky-600'>0 dona</p>
                             </h1>
                         </div>
                         <div className='flex justify-between'>
-                            <h1 className='text-xl mb-2'>Qolgan qarzlar</h1>
-                            <h1 className='text-xl text-blue-500'>
-                                8 007 000 UZS
+                            <h1 className='text-xl mb-4 w-52'>
+                                To`plamlar{" "}
+                                <p className='text-sky-600'>0 dona</p>
+                            </h1>
+                            <h1 className='text-xl w-32'>
+                                Sertifikatlar{" "}
+                                <p className='text-sky-600'>0 dona</p>
+                            </h1>
+                        </div>
+                        <div className='flex justify-between'>
+                            <h1 className='text-xl mb-4 w-52'>
+                                Qaytarib olishlar{" "}
+                                <p className='text-sky-600'>1 dona</p>
+                            </h1>
+                            <h1 className='text-xl w-32'>
+                                Qaytarib olishlar summasi{" "}
+                                <p className='text-sky-600'>-220 000 UZS</p>
+                            </h1>
+                        </div>
+                        <div className='flex justify-between'>
+                            <h1 className='text-xl mb-4 w-52 '>
+                                Almashtirishlar{" "}
+                                <p className='text-sky-600'>0 dona</p>
+                            </h1>
+                            <h1 className='text-xl w-32'>
+                                Almashtirishlar summasi{" "}
+                                <p className='text-sky-600'>0 UZS</p>
                             </h1>
                         </div>
                     </div>
