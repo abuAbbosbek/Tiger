@@ -1,14 +1,14 @@
-import { CodeSandboxOutlined, PlusOutlined } from "@ant-design/icons";
+import { Table } from "antd";
+import 'boxicons'
+import { writeoffdata } from "../table/table";
+import { WriteOffData } from "../tabledata/tabledata";
+import { PlusOutlined } from "@ant-design/icons";
 
 const WriteOff = () => {
-    // const [open, setOpen] = useState(false);
 
-    // const handlyOpenModal = () => {
-    //     setOpen(true);
-    // };
-    // const handlyCancel = () => {
-    //     setOpen(false);
-    // };
+
+    
+
     return (
         <>
             <div>
@@ -30,20 +30,15 @@ const WriteOff = () => {
                             <option value=''>sdas</option>
                         </select>
                     </div>
-                    <div className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
-                        <button>
-                            <CodeSandboxOutlined className='mr-2' />
-                            Harakatlar
-                        </button>
-                    </div>
                     <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
                         <button>
                             <PlusOutlined className='mr-2' />
-                            Yaratish
+                            Hisobdan chiqarish
                         </button>
                     </div>
                 </div>
             </div>
+             <Table dataSource={WriteOffData} columns={writeoffdata} className="mt-2" />;
         </>
     );
 };
