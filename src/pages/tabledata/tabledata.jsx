@@ -45,11 +45,26 @@ export const CustomersData = [
 export const ImportData = [
     {
         key: "1",
-        id: "164738",
-        tovarnomi: `Product import`,
+        id: "164786",
         dokon: "Store Avtodisk",
-        soni: `10 `,
-        summasi: "240 000 UZS",
+        soni: "10\n10",
+        address: "70 000 UZS\n240 000 UZS",
+        status: "Yakunlandi",
+    },
+    {
+        key: "2",
+        id: "574065",
+        dokon: "Store Avtodisk",
+        soni: "50\n50",
+        address: "70 000 UZS\n240 000 UZS",
+        status: "Yakunlandi",
+    },
+    {
+        key: "3",
+        id: "346963",
+        dokon: "Store Avtodisk",
+        soni: "18\n18",
+        address: "70 000 UZS\n240 000 UZS",
         status: "Yakunlandi",
     },
 ];
@@ -107,5 +122,32 @@ export const WriteOffData = [
         soni: 18,
         address: "70 000 UZS\n240 000 UZS",
         writeoff: "delete",
+    },
+];
+
+export const RepricingData = [
+    {
+        key: "1",
+        id: "164786",
+        dokon: "Store Avtodisk",
+        uslub: "Narxni o`zgartirish",
+        soni: 3,
+        status: "Yakunlandi",
+    },
+    {
+        key: "2",
+        id: "574065",
+        dokon: "Store Avtodisk",
+        uslub: "Narxni o`zgartirish",
+        soni: 5,
+        status: "Yakunlandi",
+    },
+    {
+        key: "3",
+        id: "346963",
+        dokon: "Store Avtodisk",
+        uslub: "Narxni o`zgartirish",
+        soni: 8,
+        status: "Yakunlandi",
     },
 ];

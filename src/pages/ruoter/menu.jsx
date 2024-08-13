@@ -14,6 +14,7 @@ import Katalog from "../goods/katalog";
 import Import from "../goods/import";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import NewSales from "../sales/newsales";
+import Repricing from "../goods/repricing";
 
 const MenuList = [
     {
@@ -51,7 +52,8 @@ const MenuList = [
             {
                 id: 13,
                 title: "Qayta baholash",
-                path: "/qayta-baholash",
+                path: "/repricing",
+                element: <Repricing />,
             },
             {
                 id: 14,

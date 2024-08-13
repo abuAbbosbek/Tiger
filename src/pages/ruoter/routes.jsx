@@ -1,5 +1,6 @@
 import Import from "../goods/import";
 import Katalog from "../goods/katalog";
+import Repricing from "../goods/repricing";
 import WriteOff from "../goods/writeoff";
 import ShopChildreanPage from "../hisobotlar/children/shop";
 import Customers from "../mijozlar/mijozlar";
@@ -48,4 +49,9 @@ export const menu = [
         path: "/newsales",
         element: < NewSales />,
     },
+    {
+        id: 9,
+        path: "/repricing",
+        element: <Repricing />,
+    }
 ];

@@ -1,15 +1,15 @@
-import { Table } from "antd";
-import 'boxicons'
-import { writeoffdata } from "../table/table";
-import { WriteOffData } from "../tabledata/tabledata";
 import { PlusOutlined } from "@ant-design/icons";
+import { Table } from "antd";
+import { RepricingData } from "../tabledata/tabledata";
+import { repricingdata } from "../table/table";
 
-const WriteOff = () => {
+
+const Repricing = () => {
     return (
         <>
             <div>
                 <div>
-                    <h1 className='text-4xl'>Hisobdan chiqarish</h1>
+                    <h1 className='text-4xl'>Narxlash</h1>
                 </div>
                 <div className='mt-7 flex'>
                     <div>
@@ -17,7 +17,7 @@ const WriteOff = () => {
                             className='text-xl px-3 py-3 w-[700px] rounded-md bg-slate-100
                     '
                             type='search'
-                            placeholder='Artikl, Shtrix-kod, Nomi'
+                            placeholder='Id, nomi, soni'
                         />
                         <select
                             id='1'
@@ -29,14 +29,19 @@ const WriteOff = () => {
                     <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
                         <button>
                             <PlusOutlined className='mr-2' />
-                            Hisobdan chiqarish
+                            Yangidan narxlash
                         </button>
                     </div>
                 </div>
             </div>
-             <Table dataSource={WriteOffData} columns={writeoffdata} className="mt-2" />;
+            <Table
+                dataSource={RepricingData}
+                columns={repricingdata}
+                className='mt-2'
+            />
+            ;
         </>
     );
-};
+}
 
-export default WriteOff;
+export default Repricing;
