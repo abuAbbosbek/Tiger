@@ -6,6 +6,7 @@ import ShopChildreanPage from "../hisobotlar/children/shop";
 import Customers from "../mijozlar/mijozlar";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import CustomerDebts from "../mijozlar/mijozlarqarzlari";
+import YangiMijoz from "../mijozlar/yangimijozbutton";
 import NewSales from "../sales/newsales";
 
 export const menu = [
@@ -53,5 +54,10 @@ export const menu = [
         id: 9,
         path: "/repricing",
         element: <Repricing />,
+    },
+    {
+        id: 10,
+        path: "/yangi-mijoz",
+        element: < YangiMijoz />,
     }
 ];

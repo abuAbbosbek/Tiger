@@ -13,6 +13,7 @@
     "@ant-design/icons": "^5.4.0",
     "@ant-design/pro-components": "^2.7.14",
     "antd": "^5.19.3",
+    "axios": "^1.7.4",
     "boxicons": "^2.1.4",
     "moment": "^2.30.1",
     "react": "^18.3.1",
