@@ -1,153 +1,135 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "boxicons";
 
-function YangiMijoz() {
-    return (
-        <div className='flex h-screen bg-gray-100'>
-            {/* Sidebar */}
-            <div className='w-1/4 bg-white p-4 shadow-lg'>
-                <ul className='space-y-4'>
-                    <li className='text-blue-600'>Asosiy</li>
-                    <li>Manzil</li>
-                    <li>Ijtimoiy tarmoqlar</li>
-                    <li>Qarindoshlar</li>
-                    <li>Guruhlar / Teglar</li>
-                    <li>Xabarlar</li>
-                    <li>Kartalar</li>
-                </ul>
-            </div>
 
-            {/* Main Content */}
-            <div className='w-3/4 p-8'>
-                <h1 className='text-2xl font-bold mb-4'>Yangi mijoz</h1>
 
-                <div className='bg-white p-6 rounded-lg shadow-lg'>
-                    <h2 className='text-xl font-bold mb-4'>Asosiy</h2>
+const Sidebar = () => {
+    const [content, setContent] = useState("Asosiy sahifa kontenti");
 
-                    <form className='space-y-4'>
-                        <div className='flex space-x-4'>
-                            <div className='w-1/3'>
-                                <label className='block text-sm font-medium text-gray-700'>
+    const navigate = useNavigate();
+
+    const handleButtonClick = () => {
+        navigate("/customers");
+    };
+
+
+
+
+    const menuItems = [
+        {
+            name: "Asosiy",
+            content: (
+                <div>
+                    <h1 className='text-4xl mb-7'>Asosiy</h1>
+                    <div>
+                        <div className='flex'>
+                            <div className='mb-4 flex-1'>
+                                <label
+                                    className='block text-black mb-4 text-xl'
+                                    htmlFor='input'>
                                     Ism
                                 </label>
                                 <input
                                     type='text'
-                                    placeholder='Ismni kiriting'
-                                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
+                                    id='input'
+                                    className='w-[350px] p-4 bg-slate-200 border rounded-xl'
+                                    placeholder='Ismni kiriting...'
                                 />
                             </div>
-                            <div className='w-1/3'>
-                                <label className='block text-sm font-medium text-gray-700'>
+                            <div className='mb-4 flex-1'>
+                                <label
+                                    className='block text-black mb-4 text-xl'
+                                    htmlFor='input'>
                                     Familiya
                                 </label>
                                 <input
                                     type='text'
-                                    placeholder='Familiyani kiriting'
-                                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
+                                    id='input'
+                                    className='w-[350px] p-4 bg-slate-200 border rounded-xl'
+                                    placeholder='Familiyani  kiriting...'
                                 />
                             </div>
-                            <div className='w-1/3'>
-                                <label className='block text-sm font-medium text-gray-700'>
+                            <div className='mb-4 flex-1'>
+                                <label
+                                    className='block text-black mb-4 text-xl'
+                                    htmlFor='input'>
                                     Otasining ismi
                                 </label>
                                 <input
                                     type='text'
-                                    placeholder='Otasining ismini kiriting'
-                                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
+                                    id='input'
+                                    className='w-[350px] p-4 bg-slate-200 border rounded-xl'
+                                    placeholder='Otasining ismini kiriting...'
                                 />
                             </div>
                         </div>
-
-                        <div className='flex space-x-4'>
-                            <div className='w-1/3'>
-                                <label className='block text-sm font-medium text-gray-700'>
-                                    Tug`ilgan kuni
-                                </label>
-                                <input
-                                    type='text'
-                                    placeholder='KK'
-                                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
-                                />
-                            </div>
-                            <div className='w-1/3'>
-                                <label className='block text-sm font-medium text-gray-700'>
-                                    Jins
-                                </label>
-                                <div className='flex items-center space-x-4'>
-                                    <label className='inline-flex items-center'>
-                                        <input
-                                            type='radio'
-                                            name='gender'
-                                            className='form-radio text-blue-600'
-                                        />
-                                        <span className='ml-2'>Erkak</span>
-                                    </label>
-                                    <label className='inline-flex items-center'>
-                                        <input
-                                            type='radio'
-                                            name='gender'
-                                            className='form-radio text-blue-600'
-                                        />
-                                        <span className='ml-2'>Ayol</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div className='w-1/3'>
-                                <label className='block text-sm font-medium text-gray-700'>
-                                    Telefon
-                                </label>
-                                <input
-                                    type='text'
-                                    placeholder='Telefon raqamni kiriting'
-                                    className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'
-                                />
+                        <div>
+                            <div>
+                                <h1>Tug`ilgan kuni</h1>
+                                
                             </div>
                         </div>
+                    </div>
+                </div>
+            ),
+        },
+        { name: "Manzil", content: "Manzil sahifa kontenti" },
+        {
+            name: "Ijtimoiy tarmoqlar",
+            content: "Ijtimoiy tarmoqlar sahifa kontenti",
+        },
+        { name: "Qarindoshlar", content: "Qarindoshlar sahifa kontenti" },
+        {
+            name: "Guruhlar / Teglar",
+            content: "Guruhlar / Teglar sahifa kontenti",
+        },
+        { name: "Xabarlar", content: "Xabarlar sahifa kontenti" },
+        { name: "Kartalar", content: "Kartalar sahifa kontenti" },
+    ];
 
-                        <div className='flex space-x-4'>
-                            <div className='w-1/2'>
-                                <label className='block text-sm font-medium text-gray-700'>
-                                    Oilaviy ahvol
-                                </label>
-                                <select className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm'>
-                                    <option>Turmushda emas</option>
-                                    <option>Turmushda</option>
-                                </select>
-                            </div>
-                            <div className='w-1/2'>
-                                <label className='block text-sm font-medium text-gray-700'>
-                                    Suhbat tili
-                                </label>
-                                <div className='flex items-center space-x-4'>
-                                    <img
-                                        src='uzb-flag.png'
-                                        alt='Uzb Flag'
-                                        className='w-8 h-5'
-                                    />
-                                    <img
-                                        src='rus-flag.png'
-                                        alt='Rus Flag'
-                                        className='w-8 h-5'
-                                    />
-                                    <img
-                                        src='eng-flag.png'
-                                        alt='Eng Flag'
-                                        className='w-8 h-5'
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='mt-6'>
-                            <button
-                                type='submit'
-                                className='px-4 py-2 bg-blue-600 text-white rounded-md'>
-                                Yaratish
-                            </button>
-                        </div>
-                    </form>
+    return (
+        <>
+            <div className='flex justify-between mb-5 items-center p-4 bg-white shadow-md rounded-lg'>
+                <button
+                    className='flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors'
+                    onClick={handleButtonClick}>
+                    <box-icon
+                        name='chevron-left'
+                        type='solid'
+                        color='#ffffff'></box-icon>
+                    <h1 className='text-lg font-semibold'>Yangi Mijoz</h1>
+                </button>
+                <button className='flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors'>
+                    <h1 className='text-lg font-semibold'>Yaratish</h1>
+                </button>
+            </div>
+            <div className='flex h-screen'>
+                <div className='w-1/4 bg-white p-4 shadow-lg'>
+                    <ul className='space-y-4'>
+                        {menuItems.map((item, index) => (
+                            <li key={index}>
+                                <button
+                                    className={`w-full text-left p-2 rounded ${
+                                        content === item.content
+                                            ? "bg-blue-600 text-white"
+                                            : "hover:bg-gray-100"
+                                    }`}
+                                    onClick={() => setContent(item.content)}>
+                                    {item.name}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className='w-3/4 p-5'>
+                    <div>{content}</div>
                 </div>
             </div>
-        </div>
+        </>
     );
-}
+};
+
+const YangiMijoz = () => <Sidebar />;
 
 export default YangiMijoz;

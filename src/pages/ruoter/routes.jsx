@@ -57,7 +57,7 @@ export const menu = [
     },
     {
         id: 10,
-        path: "/yangi-mijoz",
+        path: "/yangimijoz",
         element: < YangiMijoz />,
     }
 ];
