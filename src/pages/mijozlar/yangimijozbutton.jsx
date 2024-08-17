@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "boxicons";
 
 
 
 const Sidebar = () => {
-    const [content, setContent] = useState("Asosiy sahifa kontenti");
 
     const navigate = useNavigate();
 
@@ -13,8 +12,32 @@ const Sidebar = () => {
         navigate("/customers");
     };
 
+  
+    const [activeTab, setActiveTab] = useState("Erkak");
+
+    useEffect(() => {
+        const tabs = ["Erkak", "Ayol"];
+        let currentIndex = 0;
+
+        const interval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % tabs.length;
+            setActiveTab(tabs[currentIndex]);
+        }, 1000); // Har 1 soniyada o'zgaradi
+
+        return () => clearInterval(interval); // Component o'chirilganda intervalni to'xtatish
+    }, []);
 
 
+
+
+
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+    const month = Array.from({ length: 12 }, (_, i) => i + 1);
+    const currentYear = new Date().getFullYear();
+    const years = Array.from(
+        { length: currentYear - 1900 + 1 },
+        (_, i) => 1900 + i
+    );
 
     const menuItems = [
         {
@@ -65,9 +88,74 @@ const Sidebar = () => {
                             </div>
                         </div>
                         <div>
-                            <div>
-                                <h1>Tug`ilgan kuni</h1>
-                                
+                            <div className='max-w-sm mt-5'>
+                                <label className='block text-gray-700 text-xl  mb-2'>
+                                    Tug`ilgan kuni
+                                </label>
+                                <div className='flex space-x-2'>
+                                    <select className='w-20 p-3 border bg-slate-200 text-center rounded-xl'>
+                                        <option value='' disabled selected>
+                                            KK
+                                        </option>
+                                        {days.map((month) => (
+                                            <option key={month} value={month}>
+                                                {month}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <select className='w-20 p-3 border bg-slate-200 text-center rounded-xl'>
+                                        <option value='' disabled selected>
+                                            OO
+                                        </option>
+                                        {month.map((day) => (
+                                            <option key={day} value={day}>
+                                                {day}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    <select className='w-40 p-3 border rounded-xl bg-slate-200 text-center'>
+                                        <option value='' disabled selected>
+                                            YYYY
+                                        </option>
+                                        {years.map((year) => (
+                                            <option key={year} value={year}>
+                                                {year}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className='mt-5'>
+                                <label className='block text-gray-700 text-xl mb-2'>
+                                    Jinsi
+                                </label>
+                                <div className='flex items-center mb-4'>
+                                    <div className='bg-gray-200 p-1 rounded-2xl flex w-full'>
+                                        <button
+                                            className={`px-4 py-4 rounded-2xl focus:outline-none w-5/10 text-xl ${
+                                                activeTab === "Erkak"
+                                                    ? "bg-white"
+                                                    : ""
+                                            }`}
+                                            onClick={() =>
+                                                setActiveTab("Erkak")
+                                            }>
+                                            Erkak
+                                        </button>
+                                        <button
+                                            className={`px-4 py-4 rounded-2xl focus:outline-none w-5/10 text-xl ${
+                                                activeTab === "Ayol"
+                                                    ? "bg-white"
+                                                    : ""    
+                                            }`}
+                                            onClick={() =>
+                                                setActiveTab("Ayol")
+                                            }>
+                                            Ayol
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -87,6 +175,8 @@ const Sidebar = () => {
         { name: "Xabarlar", content: "Xabarlar sahifa kontenti" },
         { name: "Kartalar", content: "Kartalar sahifa kontenti" },
     ];
+
+    const [content, setContent] = useState(menuItems[0].content);
 
     return (
         <>
