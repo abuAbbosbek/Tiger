@@ -6,16 +6,61 @@ import {
 } from "@ant-design/icons";
 import { Table } from "antd";
 import { customers } from "../table/table";
-import { CustomersData } from "../tabledata/tabledata";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-
+import axios from "axios";
 const Customers = () => {
     const navigate = useNavigate();
 
     const handleButtonClick = () => {
         navigate("/yangimijoz");
     };
+
+    const API_URL = "https://b91a-188-113-244-159.ngrok-free.app";
+
+
+    // useEffect(() => {
+    //     // API chaqiruvini amalga oshirish
+    //     const loadData = async () => {
+    //         try {
+    //             const response = await axios.get(`${API_URL}/user/all`);
+    //             console.log(response.data.data);
+    //             setData(response.data.data);
+    //         } catch (err) {
+    //             setError(err);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     loadData();
+
+    // }, []);
+
+    const loadData = async (setData, setError, setLoading) => {
+    try {
+        const response = await axios.get(`${API_URL}/user/all`);
+        console.log(response.data.data);
+        setData(response.data.data);
+    } catch (err) {
+        setError(err);
+    } finally {
+        setLoading(false);
+    }
+    };
+    
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        loadData(setData, setError, setLoading);
+    }, []);
+
+    
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <>
@@ -72,7 +117,12 @@ const Customers = () => {
 
             <div>
                 <br />
-                <Table columns={customers} dataSource={CustomersData} />
+                <Table columns={customers} dataSource={ loadData   } />
+            </div>
+
+            <div>
+                {/* <h1>API Ma`lumotlari</h1> */}
+                <pre>{JSON.stringify(data, null, 2)}</pre>
             </div>
         </>
     );
