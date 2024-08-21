@@ -17,50 +17,24 @@ const Customers = () => {
         navigate("/yangimijoz");
     };
 
-    const API_URL = "https://b91a-188-113-244-159.ngrok-free.app";
 
-
-    // useEffect(() => {
-    //     // API chaqiruvini amalga oshirish
-    //     const loadData = async () => {
-    //         try {
-    //             const response = await axios.get(`${API_URL}/user/all`);
-    //             console.log(response.data.data);
-    //             setData(response.data.data);
-    //         } catch (err) {
-    //             setError(err);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     loadData();
-
-    // }, []);
-
-    const loadData = async (setData, setError, setLoading) => {
-    try {
-        const response = await axios.get(`${API_URL}/user/all`);
-        console.log(response.data.data);
-        setData(response.data.data);
-    } catch (err) {
-        setError(err);
-    } finally {
-        setLoading(false);
-    }
-    };
-    
-    const [data, setData] = useState(null);
-    const [error, setError] = useState(null);
+    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadData(setData, setError, setLoading);
+        // API'ga so'rov yuborish
+        fetch("https://b91a-188-113-244-159.ngrok-free.app/user/all")
+            .then((response) => response.json())
+            .then((data) => {
+                // Ma'lumotlarni qabul qilish
+                setData(data); // `data`ni olingan ma'lumotlarga o'rnatamiz
+                setLoading(false); // Yuklanish tugadi
+            })
+            .catch((error) => {
+                console.error("API so'rovi xatosi:", error);
+                setLoading(false); // Yuklanish tugadi
+            });
     }, []);
-
-    
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
 
     return (
         <>
@@ -108,7 +82,6 @@ const Customers = () => {
                 <div className='px-3 bg-sky-500 text-xl py-3 rounded-md ml-5'>
                     <button onClick={handleButtonClick}>
                         {" "}
-                        {/* Add onClick here */}
                         <PlusOutlined className='mr-2' />
                         Yangi mijoz
                     </button>
@@ -117,11 +90,10 @@ const Customers = () => {
 
             <div>
                 <br />
-                <Table columns={customers} dataSource={ loadData   } />
+                <Table columns={customers} dataSource={data} loading={loading} rowKey='id' />
             </div>
 
             <div>
-                {/* <h1>API Ma`lumotlari</h1> */}
                 <pre>{JSON.stringify(data, null, 2)}</pre>
             </div>
         </>
