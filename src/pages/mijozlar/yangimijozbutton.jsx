@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import "boxicons";
 import { useState } from "react";
+import Uzbekistan from "../../../public/uzbekistan.png";
+import Russia from "../../../public/russia.png";
+import UnitedStates from "../../../public/united-states.png";
 
 const Sidebar = () => {
     const navigate = useNavigate();
@@ -11,6 +14,8 @@ const Sidebar = () => {
 
     const [content, setContent] = useState();
     const [activeTab, setActiveTab] = useState("Erkak");
+    const [activeTab1, setActiveTab1] = useState("");
+    const [activeTab2, setActiveTab2] = useState("");
 
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
     const month = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -20,15 +25,7 @@ const Sidebar = () => {
         (_, i) => 1900 + i
     );
 
-
-    const [countryCode, setCountryCode] = useState("+1");
-    // const [phoneNumber, setPhoneNumber] = useState("");
-
-    // const handlePhoneInput = (e) => {
-    //     // Faqat raqamlarni qabul qilish
-    //     const formattedPhoneNumber = e.target.value.replace(/[^0-9]/g, "");
-    //     setPhoneNumber(formattedPhoneNumber);
-    // };
+    const [countryCode, setCountryCode] = useState("+998");
 
     const handleCountryCodeChange = (e) => {
         setCountryCode(e.target.value);
@@ -36,24 +33,40 @@ const Sidebar = () => {
 
     const [value, setValue] = useState("");
 
-    const formatValue = (input) => {
-        // Faqat raqamlarni olish
-        input = input.replace(/[^0-9]\D/g, "");
+    const handleInputChange = (e) => {
+        let input = e.target.value.replace(/\D/g, "");
 
-        // 3 ta va 2 ta raqamdan keyin chiziqcha qo'yish
-        if (input.length > 3) {
-            input = input.slice(0, 3) + "-" + input.slice(3);
-        }
-        if (input.length > 6) {
-            input = input.slice(5, 8) + "-" + input.slice(8);
+        if (input.length > 10) {
+            input = input.slice(0, 10);
         }
 
-        return input;
+        let formattedValue = input;
+        if (input.length > 8) {
+            formattedValue = `${input.slice(0, 2)}-${input.slice(
+                2,
+                5
+            )}-${input.slice(5, 7)}-${input.slice(7, 9)}`;
+        } else if (input.length > 6) {
+            formattedValue = `${input.slice(0, 2)}-${input.slice(
+                2,
+                5
+            )}-${input.slice(5, 7)}-${input.slice(7)}`;
+        } else if (input.length > 4) {
+            formattedValue = `${input.slice(0, 2)}-${input.slice(
+                2,
+                5
+            )}-${input.slice(5)}`;
+        } else if (input.length > 2) {
+            formattedValue = `${input.slice(0, 2)}-${input.slice(2)}`;
+        }
+
+        setValue(formattedValue);
     };
 
-    const handleChange = (event) => {
-        const { value } = event.target;
-        setValue(formatValue(value));
+    const handleKeyDown = (e) => {
+        if (e.key === "Backspace" && value.endsWith("-")) {
+            setValue(value.slice(0, -1));
+        }
     };
 
     const menuItems = [
@@ -227,29 +240,135 @@ const Sidebar = () => {
                                 </div>
                             </div>
                             <div>
-                                <div className='flex items-center space-x-2'>
-                                    <select
-                                        className='p-4 bg-slate-200 border rounded-xl'
-                                        value={countryCode}
-                                        onChange={handleCountryCodeChange}>
-                                        <option value='+1'>+1 (US)</option>
-                                        <option value='+44'>+44 (UK)</option>
-                                        <option value='+91'>+91 (India)</option>
-                                        <option value='+81'>+81 (Japan)</option>
-                                        <option value='+998'>
-                                            +998 (Uzbekistan)
-                                        </option>
-                                        {/* Qo'shimcha davlat kodlari */}
-                                    </select>
-                                    <input
-                                        type='tel'
-                                        className='w-[250px] p-4 bg-slate-200 border rounded-xl'
-                                        placeholder='Telefon raqamini kiriting...'
-                                        onInput={formatValue}
-                                        value={value}
-                                        onChange={handleChange}
-                                        maxLength='7'
-                                    />
+                                <h1 className='text-xl'>Telefon</h1>
+                                <div className='flex gap-10'>
+                                    <div className='flex items-center space-x-2 mt-5'>
+                                        <select
+                                            className='p-4 bg-slate-200 border rounded-xl'
+                                            value={countryCode}
+                                            onChange={handleCountryCodeChange}>
+                                            <option value='+1'>+1 (US)</option>
+                                            <option value='+44'>
+                                                +44 (UK)
+                                            </option>
+                                            <option value='+91'>
+                                                +91 (India)
+                                            </option>
+                                            <option value='+81'>
+                                                +81 (Japan)
+                                            </option>
+                                            <option value='+998'>
+                                                +998 (Uzbekistan)
+                                            </option>
+                                            Qo`shimcha davlat kodlari
+                                        </select>
+                                        <input
+                                            type='tel'
+                                            className='w-[250px] p-4 bg-slate-200 border rounded-xl'
+                                            placeholder='Telefon raqamini kiriting...'
+                                            value={value}
+                                            onChange={handleInputChange}
+                                            onKeyDown={handleKeyDown}
+                                            maxLength='12'
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <button className='px-3 py-3 w-[400px] text-sky-500 text-lg border-2 rounded-xl bg-slate-200 mt-5'>
+                                            + Telefon raqam qo`shish
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='flex gap-10'>
+                                <div>
+                                    <h1 className='text-xl mt-5'>
+                                        Oilaviy ahvol
+                                    </h1>
+                                    <div className='flex items-center mt-5'>
+                                        <div className='bg-gray-200 p-1 rounded-2xl flex '>
+                                            <button
+                                                className={`px-2 py-2 rounded-2xl focus:outline-none w-[300px] text-xl ${
+                                                    activeTab1 ===
+                                                    "Turmushdaemas"
+                                                        ? "bg-white"
+                                                        : ""
+                                                }`}
+                                                onClick={() =>
+                                                    setActiveTab1(
+                                                        "Turmushdaemas"
+                                                    )
+                                                }>
+                                                Turmushda emas
+                                            </button>
+                                            <button
+                                                className={`px-2 py-2 rounded-2xl focus:outline-none w-[300px] text-xl ${
+                                                    activeTab1 === "Turmushda"
+                                                        ? "bg-white"
+                                                        : ""
+                                                }`}
+                                                onClick={() =>
+                                                    setActiveTab1("Turmushda")
+                                                }>
+                                                Turmushda
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h1 className='text-xl mt-5'>
+                                        Suhbat tili
+                                    </h1>
+                                    <div>
+                                        <div className='flex items-center mt-5'>
+                                            <div className='bg-gray-200 p-1 rounded-2xl flex '>
+                                                <button
+                                                    className={`px-2 py-2 rounded-2xl focus:outline-none w-[100px] flex justify-center text-xl ${
+                                                        activeTab2 === "uzbek"
+                                                            ? "bg-white"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() =>
+                                                        setActiveTab2("uzbek")
+                                                    }>
+                                                    <img
+                                                        src={Uzbekistan}
+                                                        alt='img'
+                                                    />
+                                                </button>
+                                                <button
+                                                    className={`px-2 py-2 rounded-2xl focus:outline-none w-[100px] text-xl flex justify-center ${
+                                                        activeTab2 === "rus"
+                                                            ? "bg-white"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() =>
+                                                        setActiveTab2("rus")
+                                                    }>
+                                                    <img
+                                                        src={Russia}
+                                                        alt='img'
+                                                    />
+                                                </button>
+                                                <button
+                                                    className={`px-2 py-2 rounded-2xl focus:outline-none w-[100px] text-xl  justify-center flex ${
+                                                        activeTab2 === "ingliz"
+                                                            ? "bg-white"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() =>
+                                                        setActiveTab2("ingliz")
+                                                    }>
+                                                    <img
+                                                        src={UnitedStates}
+                                                        alt='img'
+                                                    />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

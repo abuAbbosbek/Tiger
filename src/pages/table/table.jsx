@@ -1,5 +1,4 @@
 import { SettingOutlined } from "@ant-design/icons";
-import { Checkbox } from "antd";
 import "boxicons";
 import moment from "moment";
 
@@ -37,49 +36,58 @@ export const columns = [
 ];
 
 export const customers = [
-    {
-        title: <Checkbox />,
-        dataIndex: "checkbox",
-    },
+    // {
+    //     title: <Checkbox />,
+    //     dataIndex: "checkbox",
+    // },
     {
         title: "ID",
         dataIndex: "id",
+        key: 'id'
     },
     {
         title: "F.I.SH",
-        dataIndex: "fish",
+        dataIndex: "name",
     },
     {
         title: "Telefon",
-        dataIndex: "telefon",
+        dataIndex: "bithday",
     },
     {
-        title: "Guruhlar",
-        dataIndex: "guruhlar",
+        title: "dasd",
+        dataIndex: "passport_series",
+    },
+    {
+        title: "Telefon",
+        dataIndex: "phone_number",
+    },
+    {
+        title: "login",
+        dataIndex: "login",
     },
     {
         title: "Teglar",
-        dataIndex: "teglar",
+        dataIndex: "password",
     },
     {
         title: "Xarid summasi",
-        dataIndex: "xaridsummasi",
+        dataIndex: "created",
     },
     {
         title: "Oxirgi xarid",
-        dataIndex: "oxirgixarid",
+        dataIndex: "role",
     },
-    {
-        title: "Tug'ilgan kuni",
-        dataIndex: "tugilgankuni",
-    },
-    {
-        title: "Yaratilgan vaqt",
-        dataIndex: "yaratilganvaqt",
-    },
-    {
-        title: <SettingOutlined />,
-    },
+    // {
+    //     title: "Tug'ilgan kuni",
+    //     dataIndex: "tugilgankuni",
+    // },
+    // {
+    //     title: "Yaratilgan vaqt",
+    //     dataIndex: "yaratilganvaqt",
+    // },
+    // {
+    //     title: <SettingOutlined />,
+    // },
 ];
 
 export const importdata = [
