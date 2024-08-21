@@ -18,47 +18,6 @@ const Customers = () => {
         navigate("/yangimijoz");
     };
 
-    // const API_URL = "https://localhost:3001";
-
-    // const loadData = async (setData, setError, setLoading) => {
-    // try {
-    //     const response = await axios.get(`${API_URL}/user/all`);
-    //     console.log(response.data.data);
-    //     setData(response.data.data);
-    // } catch (err) {
-    //     setError(err);
-    // } finally {
-    //     setLoading(false);
-    // }
-    // };
-
-    // const [data, setData] = useState(null);
-    // const [error, setError] = useState(null);
-    // const [loading, setLoading] = useState(true);
-
-    // useEffect(() => {
-    //     loadData(setData, setError, setLoading);
-    // }, []);
-
-    // if (loading) return <div>Loading...</div>;
-    // if (error) return <div>Error: {error.message}</div>;
-
-    // const [data, setData] = useState([]);
-    // const [loading, setLoading] = useState(true);
-
-    // useEffect(() => {
-    //     fetch(fetchDataFromAPI)
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setData(data);
-    //             setLoading(false);
-    //         })
-    //         .catch((error) => {
-    //             console.error("API so'rovi xatosi:", error);
-    //             setLoading(false);
-    //         });
-    // }, []);
-
     const [data, setData] = useState();
 
     
@@ -69,7 +28,8 @@ const Customers = () => {
                 .catch((err) => console.log(err));
         },);
     
-        console.log(data);
+    console.log(data);
+    
     return (
         <>
             <div className='flex justify-between'>
@@ -116,7 +76,6 @@ const Customers = () => {
                 <div className='px-3 bg-sky-500 text-xl py-3 rounded-md ml-5'>
                     <button onClick={handleButtonClick}>
                         {" "}
-                        {/* Add onClick here */}
                         <PlusOutlined className='mr-2' />
                         Yangi mijoz
                     </button>
@@ -125,13 +84,10 @@ const Customers = () => {
 
             <div>
                 <br />
-                <Table
-                    columns={customers}
-                    dataSource={data}
-                    rowKey='id'
-                />
-                
+                <Table columns={customers} dataSource={data}  rowKey='id' />
             </div>
+
+        
         </>
     );
 };
