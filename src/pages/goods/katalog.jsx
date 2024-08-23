@@ -4,14 +4,25 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { KatalogData } from "../tabledata/tabledata";
 import { Table } from "antd";
 import { columns } from "../table/table";
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KatalogModal from "../modal/katalogmodal";
+import axios from "axios";
 
 const Katalog = () => {
+
+    const [data, setData] = useState();
+
+    useEffect(() => {
+        axios
+            .get("http://localhost:3001/product/all")
+            .then((res) => setData(res.data.product))
+            .catch((err) => console.log(err));
+    });
+    console.log(data);
+
     const [open, setOpen] = useState(false);
 
     const handlyOpenModal = () => {
@@ -149,7 +160,7 @@ const Katalog = () => {
                 <Table
                     rowSelection={rowSelection}
                     columns={columns}
-                    dataSource={KatalogData}
+                    dataSource={data}
                     onChange={onChange}
                     showSorterTooltip={{
                         target: "sorter-icon",

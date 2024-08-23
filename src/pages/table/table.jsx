@@ -1,31 +1,42 @@
 import { SettingOutlined } from "@ant-design/icons";
+import { Checkbox } from "antd";
 import "boxicons";
 import moment from "moment";
 
 export const columns = [
+    // {
+    //     title: "Rasm",
+    //     dataIndex: "rasm",
+    // },
     {
-        title: "Rasm",
-        dataIndex: "rasm",
-    },
-    {
-        title: "Tovar nomi",
-        dataIndex: "tovarnomi",
-    },
-    {
-        title: "Artikl",
-        dataIndex: "artikl",
-    },
-    {
-        title: "Shtrix-kod",
-        dataIndex: "shtrixkod",
+        title: "ID",
+        dataIndex: "id",
+        key: "id",
     },
     {
         title: "Turkum",
         dataIndex: "turkum",
     },
     {
+        title: "Tovar nomi",
+        dataIndex: "name",
+    },
+    {
+        title: "Price",
+        dataIndex: "price",
+    },
+    {
+        title: "Shtrix-kod",
+        dataIndex: "shtrixkod",
+    },
+
+    {
         title: "Yetkazib berish",
-        dataIndex: "yetkazibberish",
+        dataIndex: "description",
+    },
+    {
+        title: "Soni",
+        dataIndex: "quantity",
     },
     {
         title: <SettingOutlined />,
@@ -36,10 +47,10 @@ export const columns = [
 ];
 
 export const customers = [
-    // {
-    //     title: <Checkbox />,
-    //     dataIndex: "checkbox",
-    // },
+    {
+        title: <Checkbox />,
+        dataIndex: "checkbox",
+    },
     {
         title: "ID",
         dataIndex: "id",
@@ -50,8 +61,8 @@ export const customers = [
         dataIndex: "name",
     },
     {
-        title: "Telefon",
-        dataIndex: "bithday",
+        title: "Tug`ilgan kuni",
+        dataIndex: "birthday",
     },
     {
         title: "dasd",
@@ -70,24 +81,14 @@ export const customers = [
         dataIndex: "password",
     },
     {
-        title: "Xarid summasi",
+        title: "Yaratilgan vaqt",
         dataIndex: "created",
     },
     {
         title: "Oxirgi xarid",
         dataIndex: "role",
     },
-    // {
-    //     title: "Tug'ilgan kuni",
-    //     dataIndex: "tugilgankuni",
-    // },
-    // {
-    //     title: "Yaratilgan vaqt",
-    //     dataIndex: "yaratilganvaqt",
-    // },
-    // {
-    //     title: <SettingOutlined />,
-    // },
+    
 ];
 
 export const importdata = [
