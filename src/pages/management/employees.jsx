@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const Customers = () => {
+const Employees = () => {
     const navigate = useNavigate();
 
     const handleButtonClick = () => {
@@ -20,21 +20,20 @@ const Customers = () => {
 
     const [data, setData] = useState();
 
-    
-        useEffect(() => {
-            axios
-                .get("http://localhost:3001/user/all")
-                .then((res) => setData(res.data.user))
-                .catch((err) => console.log(err));  
-        },);
-    
+    useEffect(() => {
+        axios
+            .get("http://localhost:3001/user/all")
+            .then((res) => setData(res.data.user))
+            .catch((err) => console.log(err));
+    });
+
     console.log(data);
-    
+
     return (
         <>
             <div className='flex justify-between'>
                 <div className=''>
-                    <h1 className='text-4xl'>Barcha mijozlar</h1>
+                    <h1 className='text-4xl'>Barcha Xodimlar</h1>
                 </div>
                 <div className='flex '>
                     <select id='1' className='border-none pr-4 text-xl'>
@@ -77,19 +76,17 @@ const Customers = () => {
                     <button onClick={handleButtonClick}>
                         {" "}
                         <PlusOutlined className='mr-2' />
-                        Yangi mijoz
+                        Yangi xodim
                     </button>
                 </div>
             </div>
 
             <div>
                 <br />
-                <Table columns={employees} dataSource={data}  rowKey='id' />
+                <Table columns={employees} dataSource={data} rowKey='id' />
             </div>
-
-        
         </>
     );
 };
 
-export default Customers;
+export default Employees;

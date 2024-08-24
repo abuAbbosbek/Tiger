@@ -3,6 +3,7 @@ import Katalog from "../goods/katalog";
 import Repricing from "../goods/repricing";
 import WriteOff from "../goods/writeoff";
 import ShopChildreanPage from "../hisobotlar/children/shop";
+import Employees from "../management/employees";
 import Customers from "../mijozlar/mijozlar";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import CustomerDebts from "../mijozlar/mijozlarqarzlari";
@@ -48,7 +49,7 @@ export const menu = [
     {
         id: 8,
         path: "/newsales",
-        element: < NewSales />,
+        element: <NewSales />,
     },
     {
         id: 9,
@@ -58,6 +59,11 @@ export const menu = [
     {
         id: 10,
         path: "/yangimijoz",
-        element: < YangiMijoz />,
-    }
+        element: <YangiMijoz />,
+    },
+    {
+        id: 11,
+        path: "/employees",
+        element: <Employees />,
+    },
 ];

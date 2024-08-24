@@ -15,6 +15,7 @@ import Import from "../goods/import";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import NewSales from "../sales/newsales";
 import Repricing from "../goods/repricing";
+import Employees from "../management/employees";
 
 const MenuList = [
     {
@@ -184,6 +185,7 @@ const MenuList = [
                 id: 29,
                 title: "Hodimlar",
                 path: "/employees",
+                element: <Employees/>
             },
             {
                 id: 30,

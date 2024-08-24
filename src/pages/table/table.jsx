@@ -46,7 +46,7 @@ export const columns = [
     },
 ];
 
-export const customers = [
+export const employees = [
     {
         title: <Checkbox />,
         dataIndex: "checkbox",
@@ -54,7 +54,7 @@ export const customers = [
     {
         title: "ID",
         dataIndex: "id",
-        key: 'id'
+        key: "id",
     },
     {
         title: "F.I.SH",
@@ -88,7 +88,6 @@ export const customers = [
         title: "Oxirgi xarid",
         dataIndex: "role",
     },
-    
 ];
 
 export const importdata = [
