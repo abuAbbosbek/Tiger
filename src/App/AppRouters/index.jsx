@@ -2,41 +2,94 @@ import { Layout, Menu, theme } from "antd";
 import { Link, Route, Routes } from "react-router-dom";
 import { MenuList } from "../../pages/ruoter/menu";
 import { menu } from "../../pages/ruoter/routes";
+import UserProfile from "../../pages/goods/userprofile";
 
 const { Content, Footer, Sider } = Layout;
 const Dashboard = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
+    const userAvatar =
+        "https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg"; // Avatar url
+    const userEmail = "user@example.com"; // Foydalanuvchi emaili
+    const userName = "John Doe";
+
     return (
         <Layout>
+            {/* <Sider breakpoint='lg' collapsedWidth='0'>
+                    <div className='demo-logo-vertical' />
+                    <Menu
+                        className=''
+                        theme='dark'
+                        mode='inline'
+                        defaultSelectedKeys={["4"]}
+                        items={MenuList.map(
+                            ({ id, title, path, children, icon }) => {
+                                return {
+                                    key: id,
+                                    label: (
+                                        <Link to={path} className='gap-2 flex'>
+                                            {icon}
+                                            {title}
+                                        </Link>
+                                    ),
+                                    children: children.map(
+                                        ({ title, path, id }) => ({
+                                            key: id,
+                                            label: (
+                                                <Link to={path}>{title}</Link>
+                                            ),
+                                        })
+                                    ),
+                                };
+                            }
+                        )}
+                    />
+                    <UserProfile
+                        avatarUrl={userAvatar}
+                        email={userEmail}
+                        name={userName}
+                    />
+            </Sider> */}
             <Sider breakpoint='lg' collapsedWidth='0'>
                 <div className='demo-logo-vertical' />
-                <Menu
-                    theme='dark'
-                    mode='inline'
-                    defaultSelectedKeys={["4"]}
-                    items={MenuList.map(
-                        ({ id, title, path, children, icon }) => {
-                            return {
-                                key: id,
-                                label: (
-                                    <Link to={path} className="gap-2 flex">
-                                        {icon}
-                                        {title}
-                                    </Link>
-                                ),
-                                children: children.map(
-                                    ({ title, path, id }) => ({
-                                        key: id,
-                                        label: <Link to={path}>{title}</Link>,
-                                    })
-                                ),
-                            };
-                        }
-                    )}
-                />
+                <div className='flex flex-col h-full'>
+                    <Menu
+                        className='flex-grow'
+                        theme='dark'
+                        mode='inline'
+                        defaultSelectedKeys={["4"]}
+                        items={MenuList.map(
+                            ({ id, title, path, children, icon }) => {
+                                return {
+                                    key: id,
+                                    label: (
+                                        <Link to={path} className='gap-2 flex'>
+                                            {icon}
+                                            {title}
+                                        </Link>
+                                    ),
+                                    children: children.map(
+                                        ({ title, path, id }) => ({
+                                            key: id,
+                                            label: (
+                                                <Link to={path}>{title}</Link>
+                                            ),
+                                        })
+                                    ),
+                                };
+                            }
+                        )}
+                    />
+                    <UserProfile
+                        avatarUrl={userAvatar}
+                        email={userEmail}
+                        name={userName}
+                    />
+                </div>
             </Sider>
+
             <Layout>
                 {/* <Header
                     style={{
@@ -51,7 +104,7 @@ const Dashboard = () => {
                     <div
                         style={{
                             padding: 24,
-                            minHeight: 1000,
+                            minHeight: 893,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}>
