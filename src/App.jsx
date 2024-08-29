@@ -14,9 +14,11 @@ import AppRouters from "../src/App/AppRouters/index";
 import AuthRouters from "../src/App/AuthRouters/login";
 
 function App() {
-    const [login, setLogin] = useState(true);
+    let token = localStorage.getItem("accessToken")
 
-    return login ? <AuthRouters /> : <AppRouters />;
+    console.log(token)
+
+    return token ?  <AppRouters /> : <AuthRouters />;
 }
 
 export default App;

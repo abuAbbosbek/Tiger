@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function SignIn({ onSignUpClick }) {
-    const [email, setEmail] = useState("");
+    const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
@@ -9,18 +9,19 @@ function SignIn({ onSignUpClick }) {
         e.preventDefault();
 
         try {
-            const response = await fetch("/api/login", {
+            const response = await fetch("http://localhost:3001/user/auth", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ login, password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                console.log("Login successful:", data);
+                 localStorage.setItem("accessToken",data.token)
+                 window.location.reload();
             } else {
                 setError(data.message || "Login failed");
             }
@@ -38,17 +39,17 @@ function SignIn({ onSignUpClick }) {
             <form className='space-y-6' onSubmit={handleSubmit}>
                 <div>
                     <label
-                        htmlFor='email'
+                        htmlFor='text'
                         className='block text-sm font-medium text-gray-300'>
                         Your email
                     </label>
                     <input
-                        type='email'
-                        id='email'
+                        type='text'
+                        id='text'
                         className='w-full p-3 mt-1 text-gray-900 bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
                         placeholder='email@example.com'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
                         required
                     />
                 </div>
