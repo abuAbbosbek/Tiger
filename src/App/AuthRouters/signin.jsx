@@ -1,9 +1,11 @@
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 
 function SignIn({ onSignUpClick }) {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,6 +33,24 @@ function SignIn({ onSignUpClick }) {
         }
     };
 
+    const validateEmail = (email) => {
+        // Email formatini tekshiradigan kengaytirilgan regex
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        return re.test(String(email).toLowerCase());
+    };
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setLogin(value);
+
+        // Emailni tekshirish
+        if (validateEmail(value)) {
+            setError(""); // Xatolik yo'q, email to'g'ri formatda
+        } else {
+            setError("Please enter a valid email address."); // Xato xabar
+        }
+    };
+
     return (
         <div className='relative z-10 w-full max-w-md p-8 space-y-6 bg-gray-800 bg-opacity-80 rounded-lg shadow-md'>
             <h2 className='text-2xl font-bold text-center text-white'>
@@ -39,19 +59,26 @@ function SignIn({ onSignUpClick }) {
             <form className='space-y-6' onSubmit={handleSubmit}>
                 <div>
                     <label
-                        htmlFor='text'
+                        htmlFor='email'
                         className='block text-sm font-medium text-gray-300'>
-                        Your email
+                        Email
                     </label>
                     <input
-                        type='text'
-                        id='text'
-                        className='w-full p-3 mt-1 text-gray-900 bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        placeholder='email@example.com'
+                        type='email'
+                        id='email'
+                        placeholder="abc@example.com"
+                        className={`w-full p-3 mt-1 text-gray-900 bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ${
+                            error
+                                ? "focus:ring-red-500 border-red-500"
+                                : "focus:ring-blue-500"
+                        }`}
                         value={login}
-                        onChange={(e) => setLogin(e.target.value)}
+                        onChange={handleChange}
                         required
                     />
+                    {error && (
+                        <p className='mt-2 text-sm text-red-500'>{error}</p>
+                    )}
                 </div>
                 <div>
                     <label
@@ -59,15 +86,27 @@ function SignIn({ onSignUpClick }) {
                         className='block text-sm font-medium text-gray-300'>
                         Password
                     </label>
-                    <input
-                        type='password'
-                        id='password'
-                        className='w-full p-3 mt-1 text-gray-900 bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                        value={password}
-                        placeholder="*********"
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+                    <div className='relative'>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id='password'
+                            className='w-full p-3 mt-1 text-gray-900 bg-gray-200 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+                            value={password}
+                            placeholder='***********'
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <button
+                            type='button'
+                            onClick={() => setShowPassword(!showPassword)}
+                            className='absolute inset-y-0 right-0 flex items-center pr-3'>
+                            {showPassword ? (
+                                <EyeSlashIcon className='w-5 h-5 text-gray-500' />
+                            ) : (
+                                <EyeIcon className='w-5 h-5 text-gray-500' />
+                            )}
+                        </button>
+                    </div>
                 </div>
                 <button
                     type='submit'
