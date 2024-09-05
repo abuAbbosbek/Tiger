@@ -1,5 +1,3 @@
-import { SettingOutlined } from "@ant-design/icons";
-import { Checkbox } from "antd";
 import "boxicons";
 import moment from "moment";
 
@@ -34,19 +32,9 @@ export const columns = [
         title: "Soni",
         dataIndex: "quantity",
     },
-    {
-        title: <SettingOutlined />,
-        dataIndex: "things",
-        defaultSortOrder: "descend",
-        sorter: (a, b) => a.things - b.things,
-    },
 ];
 
 export const employees = [
-    {
-        title: <Checkbox />,
-        dataIndex: "checkbox",
-    },
     {
         title: "ID",
         dataIndex: "id",

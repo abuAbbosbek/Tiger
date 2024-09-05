@@ -4,7 +4,7 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { clientstable } from "../table/table";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ const Customers = () => {
     };
 
     const [data, setData] = useState();
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]); 
 
     
         useEffect(() => {
@@ -26,6 +27,41 @@ const Customers = () => {
                 .then((res) => setData(res.data.client))
                 .catch((err) => console.log(err));  
         },);
+    
+    const handleDelete = () => {
+        Promise.all(
+            selectedRowKeys.map((id) =>
+                axios
+                    .delete(`http://localhost:3001/user/delete/:${id}`)
+                    .then((res) => {
+                        console.log(res.data.massage); // O'chirilgan ma'lumot
+                    })
+                    .catch((err) => {
+                        console.error(`Xatolik yuz berdi: ${id}`, err);
+                    })
+            )
+        )
+            .then(() => {
+                message.success(
+                    "Tanlangan elementlar muvaffaqiyatli o'chirildi"
+                );
+                // O'chirilganidan keyin API orqali yangi ma'lumotlarni olish
+                axios.get("http://localhost:3001/product/all").then((res) => {
+                    setData(res.data.product); // Backenddan olingan yangi ma'lumotlarni yuklash
+                });
+                setSelectedRowKeys([]); // Checkboxni tozalash
+            })
+            .catch(() => {
+                message.error("O'chirishda xatolik yuz berdi");
+            });
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: (selectedRowKeys) => {
+            setSelectedRowKeys(selectedRowKeys);
+        },
+    };
     
     console.log(data);
     
@@ -42,7 +78,10 @@ const Customers = () => {
                         <option className=''>Statistikani ko`rsatish</option>
                     </select>
                     <div className='mx-5'>
-                        <button className='px-3 py-3 border-2 rounded-md bg-slate-50 '>
+                        <button
+                            className='px-3 py-3 border-2 rounded-md bg-slate-50 '
+                            onClick={handleDelete}
+                            disabled={!selectedRowKeys.length}>
                             <DeleteOutlined />
                         </button>
                     </div>
@@ -83,10 +122,13 @@ const Customers = () => {
 
             <div>
                 <br />
-                <Table columns={clientstable} dataSource={data}  rowKey='id' />
+                <Table
+                    columns={clientstable}
+                    dataSource={data}
+                    rowKey={(record) => record.id} // Har bir satrni unikal aniqlash
+                    rowSelection={rowSelection}
+                />
             </div>
-
-        
         </>
     );
 };
