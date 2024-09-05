@@ -4,7 +4,7 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Table } from "antd";
+import { message, Table } from "antd";
 import { columns } from "../table/table";
 import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
@@ -22,6 +22,20 @@ const Katalog = () => {
             .catch((err) => console.log(err));
     });
     console.log(data);
+
+    const handleDelete = async (categoryId) => {
+        try {
+            await axios.delete(
+                `http://localhost:3001/product/delete/${categoryId}`
+            );
+            message.success("Tovar muvaffaqiyatli o'chirildi");
+            fetchTovarlar(); // Ro'yxatni yangilash
+        } catch (error) {
+            console.error("Xato bor:", error);
+            message.error("Tovarni o'chirishda xatolik yuz berdi");
+        }
+    };
+
 
     const [open, setOpen] = useState(false);
 
@@ -96,7 +110,10 @@ const Katalog = () => {
                         <option className=''>Statistikani ko`rsatish</option>
                     </select>
                     <div className='mx-5'>
-                        <button className='px-3 py-3 border-2 rounded-md bg-slate-50 '>
+                        <button
+                            className='px-3 py-3 border-2 rounded-md bg-slate-50 '
+                            onClick={() => handleDelete(item.id)}>
+                            
                             <DeleteOutlined />
                         </button>
                     </div>

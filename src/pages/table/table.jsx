@@ -4,10 +4,6 @@ import "boxicons";
 import moment from "moment";
 
 export const columns = [
-    // {
-    //     title: "Rasm",
-    //     dataIndex: "rasm",
-    // },
     {
         title: "ID",
         dataIndex: "id",
@@ -31,7 +27,7 @@ export const columns = [
     },
 
     {
-        title: "Yetkazib berish",
+        title: "Tavsifi",
         dataIndex: "description",
     },
     {
@@ -312,5 +308,28 @@ export const repricingdata = [
                 {text}
             </span>
         ),
+    },
+];
+
+
+export const clientstable = [
+    {
+        title: "ID",
+        dataIndex: "id",
+        key: "name",
+    },
+    {
+        title: "F.I.SH",
+        dataIndex: "Name",
+        key: "name",
+    },
+    {
+        title: "Summa",
+        dataIndex: "Summa",
+        key: "Summa",
+    },
+    {
+        title: "Yaratilgan vaqt",
+        dataIndex: "TimeLimit",
     },
 ];

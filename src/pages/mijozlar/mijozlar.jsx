@@ -5,9 +5,8 @@ import {
     UnorderedListOutlined,
 } from "@ant-design/icons";
 import { Table } from "antd";
-import { employees } from "../table/table";
+import { clientstable } from "../table/table";
 import { useNavigate } from "react-router-dom";
-// import { CustomersData } from "../tabledata/tabledata";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -23,8 +22,8 @@ const Customers = () => {
     
         useEffect(() => {
             axios
-                .get("http://localhost:3001/user/all")
-                .then((res) => setData(res.data.user))
+                .get("http://localhost:3001/clients/all")
+                .then((res) => setData(res.data.client))
                 .catch((err) => console.log(err));  
         },);
     
@@ -84,7 +83,7 @@ const Customers = () => {
 
             <div>
                 <br />
-                <Table columns={employees} dataSource={data}  rowKey='id' />
+                <Table columns={clientstable} dataSource={data}  rowKey='id' />
             </div>
 
         

@@ -17,7 +17,7 @@ function App() {
 
     console.log(token)
 
-    return token ?  <AppRouters /> : <AuthRouters />;
+    return token ? <AppRouters /> : <AuthRouters />;
 }
 
 export default App;
