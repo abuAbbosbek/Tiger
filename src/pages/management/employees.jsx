@@ -4,10 +4,9 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { message, Table } from "antd";
+import { message, Table, Modal, Input } from "antd";
 import { employees } from "../table/table";
 import { useNavigate } from "react-router-dom";
-// import { CustomersData } from "../tabledata/tabledata";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -18,17 +17,26 @@ const Employees = () => {
         navigate("/yangimijoz");
     };
 
-    const [data, setData] = useState();
+    const [data, setData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
+    const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
+    const [editedData, setEditedData] = useState({
+        name: "",
+        birthday: "",
+        phone_number: "",
+        passport_series: "",
+        login: "",
+        password: "",
+    }); // Tahrirlanayotgan ma'lumotlar
 
+    // Xodimlar ma'lumotlarini olish
     useEffect(() => {
         axios
             .get("http://localhost:3001/user/all")
             .then((res) => setData(res.data.user))
             .catch((err) => console.log(err));
-    });
-
-
+    }, []);
 
     const handleDelete = () => {
         Promise.all(
@@ -36,7 +44,7 @@ const Employees = () => {
                 axios
                     .delete(`http://localhost:3001/user/delete/${id}`)
                     .then((res) => {
-                        console.log(res.data.massage); // O'chirilgan ma'lumot
+                        console.log(res.data.message); // O'chirilgan ma'lumot
                     })
                     .catch((err) => {
                         console.error(`Xatolik yuz berdi: ${id}`, err);
@@ -47,14 +55,49 @@ const Employees = () => {
                 message.success(
                     "Tanlangan elementlar muvaffaqiyatli o'chirildi"
                 );
-                // O'chirilganidan keyin API orqali yangi ma'lumotlarni olish
                 axios.get("http://localhost:3001/user/all").then((res) => {
-                    setData(res.data.product); // Backenddan olingan yangi ma'lumotlarni yuklash
+                    setData(res.data.user); // Ma'lumotlarni yangilash
                 });
                 setSelectedRowKeys([]); // Checkboxni tozalash
             })
             .catch(() => {
                 message.error("O'chirishda xatolik yuz berdi");
+            });
+    };
+
+    const handleEdit = (record) => {
+        setEditingEmployee(record);
+        setEditedData({
+            name: record.name,
+            phone_number: record.phone_number,
+            birthday: record.birthday,
+            passport_series: record.passport_series,
+            login: record.login,
+            password: record.password,
+        });
+        setIsModalVisible(true);
+    };
+
+    const handleSave = () => {
+        axios
+            .put(
+                `http://localhost:3001/user/put/${editingEmployee.id}`,
+                editedData
+            )
+            .then((res) => {
+                message.success("Ma'lumotlar muvaffaqiyatli yangilandi");
+                setData((prevData) =>
+                    prevData.map((item) =>
+                        item.id === editingEmployee.id
+                            ? { ...item, ...editedData }
+                            : item
+                    )
+                );
+                setIsModalVisible(false);
+            })
+            .catch((err) => {
+                message.error("Yangilashda xatolik yuz berdi");
+                console.log(err);
             });
     };
 
@@ -65,29 +108,25 @@ const Employees = () => {
         },
     };
 
-    console.log(data);
-
     return (
         <>
             <div className='flex justify-between'>
-                <div className=''>
+                <div>
                     <h1 className='text-4xl'>Barcha Xodimlar</h1>
                 </div>
                 <div className='flex '>
                     <select id='1' className='border-none pr-4 text-xl'>
-                        <option className=''>Statistikani ko`rsatish</option>
-                        <option className=''>Statistikani ko`rsatish</option>
-                        <option className=''>Statistikani ko`rsatish</option>
+                        <option>Statistikani ko`rsatish</option>
                     </select>
                     <div className='mx-5'>
                         <button
-                            className='px-3 py-3 border-2 rounded-md bg-slate-50 '
+                            className='px-3 py-3 border-2 rounded-md bg-slate-50'
                             onClick={handleDelete}
                             disabled={!selectedRowKeys.length}>
                             <DeleteOutlined />
                         </button>
                     </div>
-                    <button className='px-3 py-3 border-2 rounded-md bg-slate-50 '>
+                    <button className='px-3 py-3 border-2 rounded-md bg-slate-50'>
                         <UnorderedListOutlined />
                     </button>
                 </div>
@@ -100,11 +139,8 @@ const Employees = () => {
                         type='search'
                         placeholder='ID, ismi, telefon'
                     />
-                    <select
-                        id='1'
-                        className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
+                    <select className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
                         <option>Filtrlar</option>
-                        <option value=''>sdas</option>
                     </select>
                 </div>
                 <div className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
@@ -115,7 +151,6 @@ const Employees = () => {
                 </div>
                 <div className='px-3 bg-sky-500 text-xl py-3 rounded-md ml-5'>
                     <button onClick={handleButtonClick}>
-                        {" "}
                         <PlusOutlined className='mr-2' />
                         Yangi xodim
                     </button>
@@ -125,15 +160,95 @@ const Employees = () => {
             <div>
                 <br />
                 <Table
-                    columns={employees}
+                    columns={[
+                        ...employees,
+                        {
+                            title: "Amallar",
+                            render: (text, record) => (
+                                <button onClick={() => handleEdit(record)}>
+                                    <box-icon
+                                        name='edit-alt'
+                                        type='solid'
+                                        color='#0284c7'></box-icon>
+                                </button>
+                            ),
+                        },
+                    ]}
                     dataSource={data}
                     rowKey={(record) => record.id} // Har bir satrni unikal aniqlash
                     rowSelection={rowSelection}
-                    showSorterTooltip={{
-                        target: "sorter-icon",
-                    }}
                 />
             </div>
+
+            <Modal
+                title="Xodim ma'lumotlarini tahrirlash"
+                open={isModalVisible}
+                onOk={handleSave}
+                onCancel={() => setIsModalVisible(false)}>
+                <Input
+                    className='mb-5 mt-5'
+                    value={editedData.name}
+                    onChange={(e) =>
+                        setEditedData({ ...editedData, name: e.target.value })
+                    }
+                    placeholder='Ismi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.birthday}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            birthday: e.target.value,
+                        })
+                    }
+                    placeholder='Tug`ilgan sanasi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.phone_number}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            phone_number: e.target.value,
+                        })
+                    }
+                    placeholder='Telefon'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.passport_series}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            passport_series: e.target.value,
+                        })
+                    }
+                    placeholder='Passport seriyasi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.login}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            login: e.target.value,
+                        })
+                    }
+                    placeholder='Login'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.password}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            password: e.target.value,
+                        })
+                    }
+                    placeholder='Password'
+                />
+            </Modal>
         </>
     );
 };

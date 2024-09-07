@@ -1,6 +1,23 @@
 import "boxicons";
 import moment from "moment";
 
+const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+};
+const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+};
+
 export const columns = [
     {
         title: "ID",
@@ -47,9 +64,10 @@ export const employees = [
     {
         title: "Tug`ilgan kuni",
         dataIndex: "birthday",
+        render: (text) => formatDateTime(text),
     },
     {
-        title: "dasd",
+        title: "Passport seriyasi",
         dataIndex: "passport_series",
     },
     {
@@ -60,18 +78,19 @@ export const employees = [
         title: "login",
         dataIndex: "login",
     },
-    {
-        title: "Teglar",
-        dataIndex: "password",
-    },
+    // {
+    //     title: "Teglar",
+    //     dataIndex: "password",
+    // },
     {
         title: "Yaratilgan vaqt",
         dataIndex: "created",
+        render: (text) => formatDate(text),
     },
-    {
-        title: "Oxirgi xarid",
-        dataIndex: "role",
-    },
+    // {
+    //     title: "Oxirgi xarid",
+    //     dataIndex: "role",
+    // },
 ];
 
 export const importdata = [
@@ -298,7 +317,6 @@ export const repricingdata = [
         ),
     },
 ];
-
 
 export const clientstable = [
     {
