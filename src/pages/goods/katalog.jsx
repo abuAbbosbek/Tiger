@@ -132,16 +132,23 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Table, message } from "antd";
+import { Input, Modal, Table, message } from "antd";
 import { columns } from "../table/table";
-import { createPortal } from "react-dom";
 import { useEffect, useState } from "react";
-import KatalogModal from "../modal/katalogmodal";
 import axios from "axios";
 
 const Katalog = () => {
     const [data, setData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
+    const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
+    const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
+    const [editedData, setEditedData] = useState({
+        name: "",
+        turkum: "",
+        price: "",
+        quantity: "",
+        description: "",
+    });
 
     useEffect(() => {
         axios
@@ -151,15 +158,6 @@ const Katalog = () => {
     }, []); // Ma'lumotlarni faqat bir marta olish uchun
 
     console.log(data);
-
-    const [open, setOpen] = useState(false);
-
-    const handlyOpenModal = () => {
-        setOpen(true);
-    };
-    const handlyCancel = () => {
-        setOpen(false);
-    };
 
     const handleDelete = () => {
         Promise.all(
@@ -196,6 +194,42 @@ const Katalog = () => {
             setSelectedRowKeys(selectedRowKeys);
         },
     };
+
+    const handleEdit = (record) => {
+        setEditingEmployee(record);
+        setEditedData({
+            name: record.name,
+            turkum: record.turkum,
+            quantity: record.quantity,
+            price: record.price,
+            description: record.description,
+        });
+        setIsModalVisible(true);
+    };
+
+    const handleSave = () => {
+        axios
+            .put(
+                `http://localhost:3001/product/put/${editingEmployee.id}`,
+                editedData
+            )
+            .then((res) => {
+                message.success("Ma'lumotlar muvaffaqiyatli yangilandi");
+                setData((prevData) =>
+                    prevData.map((item) =>
+                        item.id === editingEmployee.id
+                            ? { ...item, ...editedData }
+                            : item
+                    )
+                );
+                setIsModalVisible(false);
+            })
+            .catch((err) => {
+                message.error("Yangilashda xatolik yuz berdi");
+                console.log(err);
+            });
+    };
+
 
     return (
         <>
@@ -262,34 +296,99 @@ const Katalog = () => {
                         Harakatlar
                     </button>
                 </div>
-                <div
+                {/* <div
                     className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'
                     onClick={handlyOpenModal}>
                     <button>
                         <PlusOutlined className='mr-2' />
                         Yaratish
                     </button>
-                </div>
+                </div> */}
             </div>
 
             <div>
                 <br />
                 <Table
-                    rowKey={(record) => record.id} // Har bir satrni unikal aniqlash
-                    rowSelection={rowSelection} // Checkboxlar uchun
-                    columns={columns}
+                    columns={[
+                        ...columns,
+                        {
+                            title: "Amallar",
+                            render: (text, record) => (
+                                <button onClick={() => handleEdit(record)}>
+                                    <box-icon
+                                        name='edit-alt'
+                                        type='solid'
+                                        color='#0284c7'></box-icon>
+                                </button>
+                            ),
+                        },
+                    ]}
                     dataSource={data}
-                    showSorterTooltip={{
-                        target: "sorter-icon",
-                    }}
+                    rowKey={(record) => record.id} // Har bir satrni unikal aniqlash
+                    rowSelection={rowSelection}
                 />
             </div>
 
-            {open &&
-                createPortal(
-                    <KatalogModal onCancel={handlyCancel} />,
-                    document.body
-                )}
+            <Modal
+                title="Xodim ma'lumotlarini tahrirlash"
+                open={isModalVisible}
+                onOk={handleSave}
+                onCancel={() => setIsModalVisible(false)}>
+                <Input
+                    className='mb-5 mt-5'
+                    value={editedData.name}
+                    onChange={(e) =>
+                        setEditedData({ ...editedData, name: e.target.value })
+                    }
+                    placeholder='Tovar nomi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.turkum}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            turkum: e.target.value,
+                        })
+                    }
+                    placeholder='Turkum'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.quantity}
+                    onChange={(e) => {
+                        setEditedData((prevData) => ({
+                            ...prevData,
+                            quantity: e.target.value,
+                        }));
+                    }}
+                    maxLength={17}
+                    required
+                    placeholder='Soni'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.description}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            description: e.target.value,
+                        })
+                    }
+                    placeholder='Tavsifi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.price}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            price: e.target.value,
+                        })
+                    }
+                    placeholder='Narxi'
+                />
+            </Modal>
         </>
     );
 };

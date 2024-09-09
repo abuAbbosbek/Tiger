@@ -16,7 +16,11 @@ function SignIn({ onSignUpClick }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ login, password }),
+                // body: JSON.stringify({ login, password }),
+                body: JSON.stringify({
+                    login: login.trim(),
+                    password: password.trim(),
+                }),
             });
 
             const data = await response.json();
@@ -31,6 +35,8 @@ function SignIn({ onSignUpClick }) {
             console.error("Error:", error);
             setError("Something went wrong. Please try again.");
         }
+        console.log("Login:", login); // Tahrir qilingan qiymatni tekshirish
+        console.log("Password:", password);
     };
 
     const validateEmail = (email) => {

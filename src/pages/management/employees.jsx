@@ -207,12 +207,35 @@ const Employees = () => {
                 <Input
                     className='mb-5'
                     value={editedData.phone_number}
-                    onChange={(e) =>
-                        setEditedData({
-                            ...editedData,
-                            phone_number: e.target.value,
-                        })
-                    }
+                    onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, ""); // Faqat raqamlarni saqlaydi
+
+                        // +998 bilan boshlanishi uchun
+                        if (value.startsWith("998")) {
+                            value = "+" + value;
+                        } else {
+                            value = "+998" + value;
+                        }
+
+                        // Formatlash
+                        if (value.length > 4)
+                            value = value.slice(0, 4) + " " + value.slice(4);
+                        if (value.length > 7)
+                            value = value.slice(0, 7) + " " + value.slice(7);
+                        if (value.length > 11)
+                            value = value.slice(0, 11) + " " + value.slice(11);
+                        if (value.length > 14)
+                            value = value.slice(0, 14) + " " + value.slice(14);
+
+                        // State-ni yangilash
+                        // setPhone_number(value); // Phone_number state-ni yangilaydi
+                        setEditedData((prevData) => ({
+                            ...prevData,
+                            phone_number: value, // editedData ichidagi phone_number-ni yangilaydi
+                        }));
+                    }}
+                    maxLength={17}
+                    required
                     placeholder='Telefon'
                 />
                 <Input
@@ -226,7 +249,7 @@ const Employees = () => {
                     }
                     placeholder='Passport seriyasi'
                 />
-                <Input
+                {/* <Input
                     className='mb-5'
                     value={editedData.login}
                     onChange={(e) =>
@@ -236,8 +259,8 @@ const Employees = () => {
                         })
                     }
                     placeholder='Login'
-                />
-                <Input
+                /> */}
+                {/* <Input
                     className='mb-5'
                     value={editedData.password}
                     onChange={(e) =>
@@ -247,7 +270,7 @@ const Employees = () => {
                         })
                     }
                     placeholder='Password'
-                />
+                /> */}
             </Modal>
         </>
     );

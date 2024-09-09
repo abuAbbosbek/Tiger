@@ -1,4 +1,8 @@
-const UserProfile = ({ avatarUrl, email, name, className = "" }) => {
+
+const UserProfile = ({  avatarUrl, email, name, className = "" }) => {
+
+    
+
     return (
         <div className={`flex items-center p-4 bg-gray-800 ${className}`}>
             <img
