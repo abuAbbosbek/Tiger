@@ -10,12 +10,13 @@ import {
 import Customers from "../mijozlar/mijozlar";
 import CustomerDebts from "../mijozlar/mijozlarqarzlari";
 import WriteOff from "../goods/writeoff";
-import Katalog from "../goods/katalog";
 import Import from "../goods/import";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import NewSales from "../sales/newsales";
 import Repricing from "../goods/repricing";
 import Employees from "../management/employees";
+import Products from "../goods/products";
+import Katalog from "../goods/katalog";
 
 const MenuList = [
     {
@@ -25,6 +26,12 @@ const MenuList = [
         children: [
             {
                 id: 8,
+                title: "Products",
+                path: "/Product",
+                element: <Products />,
+            },
+            {
+                id: 7,
                 title: "Katalog",
                 path: "/katalog",
                 element: <Katalog />,
@@ -185,7 +192,7 @@ const MenuList = [
                 id: 29,
                 title: "Hodimlar",
                 path: "/employees",
-                element: <Employees/>
+                element: <Employees />,
             },
             {
                 id: 30,

@@ -4,12 +4,12 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Input, message, Modal, Table } from "antd";
-import { katalog } from "../table/table";
-import axios from "axios";
+import { Input, Modal, Table, message } from "antd";
+import { columns } from "../table/table";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-const Katalog = () => {
+const Products = () => {
     const [data, setData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
     const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
@@ -17,16 +17,23 @@ const Katalog = () => {
     const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini boshqarish
     const [editedData, setEditedData] = useState({
         name: "",
+        price: "",
+        quantity: "",
+        description: "",
     });
 
     const [newProduct, setNewProduct] = useState({
         name: "",
+        price: "",
+        quantity: "",
+        description: "",
+        category_id: "",
     });
 
     useEffect(() => {
         axios
-            .get("http://localhost:3001/category/all")
-            .then((res) => setData(res.data.AllCategory))
+            .get("http://localhost:3001/product/all")
+            .then((res) => setData(res.data.product))
             .catch((err) => console.log(err));
     }, []);
 
@@ -34,7 +41,7 @@ const Katalog = () => {
         Promise.all(
             selectedRowKeys.map((id) =>
                 axios
-                    .delete(`http://localhost:3001/category/delete/${id}`)
+                    .delete(`http://localhost:3001/product/delete/${id}`)
                     .then((res) => {
                         console.log(res.data.massage); // O'chirilgan ma'lumot
                     })
@@ -47,8 +54,8 @@ const Katalog = () => {
                 message.success(
                     "Tanlangan elementlar muvaffaqiyatli o'chirildi"
                 );
-                axios.get("http://localhost:3001/category/all").then((res) => {
-                    setData(res.data.AllCategory);
+                axios.get("http://localhost:3001/product/all").then((res) => {
+                    setData(res.data.product);
                 });
                 setSelectedRowKeys([]);
             })
@@ -61,6 +68,10 @@ const Katalog = () => {
         setEditingEmployee(record);
         setEditedData({
             name: record.name,
+            price: record.price,
+            quantity: record.quantity,
+            description: record.description,
+            category_id: record.category_id,
         });
         setIsModalVisible(true);
     };
@@ -68,7 +79,7 @@ const Katalog = () => {
     const handleSave = () => {
         axios
             .put(
-                `http://localhost:3001/category/put/${editingEmployee.id}`,
+                `http://localhost:3001/product/update/${editingEmployee.id}`,
                 editedData
             )
             .then(() => {
@@ -94,15 +105,15 @@ const Katalog = () => {
 
     const handleAddNewProduct = () => {
         axios
-            .post("http://localhost:3001/category/create", newProduct)
+            .post("http://localhost:3001/product/create", newProduct)
             .then(() => {
                 message.success("Yangi mahsulot muvaffaqiyatli qo'shildi");
 
                 // Yangi mahsulot qo'shilgandan keyin barcha mahsulotlarni qayta yuklash
                 axios
-                    .get("http://localhost:3001/category/all")
+                    .get("http://localhost:3001/product/all")
                     .then((res) => {
-                        setData(res.data.AllCategory);
+                        setData(res.data.product);
                     })
                     .catch((err) => {
                         message.error("Mahsulotlarni yuklashda xatolik");
@@ -111,6 +122,10 @@ const Katalog = () => {
 
                 setNewProduct({
                     name: "",
+                    price: "",
+                    quantity: "",
+                    description: "",
+                    category_id: "",
                 });
 
                 setIsAddModalVisible(false);
@@ -127,6 +142,7 @@ const Katalog = () => {
             setSelectedRowKeys(selectedRowKeys);
         },
     };
+
     return (
         <>
             <div className='flex justify-between'>
@@ -187,7 +203,7 @@ const Katalog = () => {
                 <br />
                 <Table
                     columns={[
-                        ...katalog,
+                        ...columns,
                         {
                             title: "Amallar",
                             render: (record) => (
@@ -206,6 +222,7 @@ const Katalog = () => {
                 />
             </div>
 
+            {/* Tahrirlash modali */}
             <Modal
                 title="Xodim ma'lumotlarini tahrirlash"
                 open={isModalVisible}
@@ -218,6 +235,39 @@ const Katalog = () => {
                         setEditedData({ ...editedData, name: e.target.value })
                     }
                     placeholder='Tovar nomi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.quantity}
+                    onChange={(e) => {
+                        setEditedData({
+                            ...editedData,
+                            quantity: e.target.value,
+                        });
+                    }}
+                    placeholder='Soni'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.description}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            description: e.target.value,
+                        })
+                    }
+                    placeholder='Tavsifi'
+                />
+                <Input
+                    className='mb-5'
+                    value={editedData.price}
+                    onChange={(e) =>
+                        setEditedData({
+                            ...editedData,
+                            price: e.target.value,
+                        })
+                    }
+                    placeholder='Narxi'
                 />
             </Modal>
 
@@ -235,9 +285,49 @@ const Katalog = () => {
                     }
                     placeholder='Tovar nomi'
                 />
+                <Input
+                    className='mb-5'
+                    value={newProduct.quantity}
+                    onChange={(e) =>
+                        setNewProduct({
+                            ...newProduct,
+                            quantity: e.target.value,
+                        })
+                    }
+                    placeholder='Soni'
+                />
+                <Input
+                    className='mb-5'
+                    value={newProduct.description}
+                    onChange={(e) =>
+                        setNewProduct({
+                            ...newProduct,
+                            description: e.target.value,
+                        })
+                    }
+                    placeholder='Tavsifi'
+                />
+                <Input
+                    className='mb-5'
+                    value={newProduct.price}
+                    onChange={(e) =>
+                        setNewProduct({ ...newProduct, price: e.target.value })
+                    }
+                    placeholder='Narxi'
+                />
+                <Input
+                    className='mb-5'
+                    value={newProduct.category_id}
+                    onChange={(e) =>
+                        setNewProduct({
+                            ...newProduct,
+                            category_id: e.target.value,
+                        })
+                    }
+                />
             </Modal>
         </>
     );
 };
 
-export default Katalog;
+export default Products;

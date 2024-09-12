@@ -3,7 +3,6 @@ import { Link, Route, Routes } from "react-router-dom";
 import { MenuList } from "../../pages/ruoter/menu";
 import { menu } from "../../pages/ruoter/routes";
 import UserProfile from "../../pages/goods/userprofile";
-import { useEffect, useState } from "react";
 
 const { Content, Footer, Sider } = Layout;
 const Dashboard = () => {

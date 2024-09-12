@@ -339,3 +339,23 @@ export const clientstable = [
         dataIndex: "TimeLimit",
     },
 ];
+
+
+export const katalog = [
+    {
+        title: "ID",
+        dataIndex: "id",
+        key: "name",
+    },
+    {
+        title: "Tovar nomi",
+        dataIndex: "name",
+        key: "name",
+    },
+    {
+        title: "Yaratilgan vaqtdi",
+        dataIndex: "created",
+        key: "created",
+        render: (text) => formatDateTime(text),
+    },
+];

@@ -1,5 +1,6 @@
 import Import from "../goods/import";
 import Katalog from "../goods/katalog";
+import Products from "../goods/products";
 import Repricing from "../goods/repricing";
 import WriteOff from "../goods/writeoff";
 import ShopChildreanPage from "../hisobotlar/children/shop";
@@ -13,8 +14,8 @@ import NewSales from "../sales/newsales";
 export const menu = [
     {
         id: 1,
-        path: "/katalog",
-        element: <Katalog />,
+        path: "/Product",
+        element: <Products />,
     },
     {
         id: 2,
@@ -66,4 +67,9 @@ export const menu = [
         path: "/employees",
         element: <Employees />,
     },
+    {
+        id: 12,
+        path: "/katalog",
+        element: <Katalog />,
+    }
 ];
