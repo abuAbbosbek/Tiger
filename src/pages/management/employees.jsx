@@ -84,7 +84,7 @@ const Employees = () => {
                 `http://localhost:3001/user/put/${editingEmployee.id}`,
                 editedData
             )
-            .then((res) => {
+            .then(() => {
                 message.success("Ma'lumotlar muvaffaqiyatli yangilandi");
                 setData((prevData) =>
                     prevData.map((item) =>
@@ -241,12 +241,24 @@ const Employees = () => {
                 <Input
                     className='mb-5'
                     value={editedData.passport_series}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                        let value = e.target.value.toUpperCase();
+
+                        // Birinchi 2 ta belgini harflarga cheklash
+                        let letters = value.slice(0, 2).replace(/[^A-Z]/g, "");
+
+                        // Keyingi belgilarni raqamlarga cheklash
+                        let numbers = value.slice(2).replace(/[^0-9]/g, "");
+
+                        // Belgilarni 2 ta harf va 5 ta raqamga cheklash
+                        let passport_series = letters + numbers.slice(0, 7);
+
+                        // Passport seriyasini yangilash va editedData'ni yangilash
                         setEditedData({
                             ...editedData,
-                            passport_series: e.target.value,
-                        })
-                    }
+                            passport_series: passport_series,
+                        });
+                    }}
                     placeholder='Passport seriyasi'
                 />
                 {/* <Input

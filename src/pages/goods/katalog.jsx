@@ -181,6 +181,12 @@ const Katalog = () => {
                         Yaratish
                     </button>
                 </div>
+                <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
+                    <button>Eksport</button>
+                </div>
+                <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
+                    <button>Import</button>
+                </div>
             </div>
 
             <div>

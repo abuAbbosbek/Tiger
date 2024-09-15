@@ -2,7 +2,8 @@ import { Layout, Menu, theme } from "antd";
 import { Link, Route, Routes } from "react-router-dom";
 import { MenuList } from "../../pages/ruoter/menu";
 import { menu } from "../../pages/ruoter/routes";
-import UserProfile from "../../pages/goods/userprofile";
+// import UserProfile from "../../pages/goods/userprofile";
+import { Header } from "antd/es/layout/layout";
 
 const { Content, Footer, Sider } = Layout;
 const Dashboard = () => {
@@ -10,14 +11,23 @@ const Dashboard = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    let name = "sd"
-    let email = "sd"
-    let avatarUrl = "sd"
+    // let name = "sd";
+    // let email = "sd";
+    // let avatarUrl = "sd";
     return (
         <Layout>
             <Sider breakpoint='lg' collapsedWidth='0'>
                 <div className='demo-logo-vertical' />
                 <div className='flex flex-col h-full'>
+                    <Header
+                        style={{
+                            padding: 0,
+                            textAlign: "center",
+                            color: "white",
+                            fontSize: "24px",
+                        }}>
+                        Tiger
+                    </Header>
                     <Menu
                         className='flex-grow'
                         theme='dark'
@@ -45,11 +55,11 @@ const Dashboard = () => {
                             }
                         )}
                     />
-                    <UserProfile
+                    {/* <UserProfile
                         avatarUrl={avatarUrl}
                         email={email}
                         name={name}
-                    />
+                    /> */}
                 </div>
             </Sider>
 
@@ -67,7 +77,7 @@ const Dashboard = () => {
                     <div
                         style={{
                             padding: 24,
-                            minHeight: 893,
+                            minHeight: 859,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}>

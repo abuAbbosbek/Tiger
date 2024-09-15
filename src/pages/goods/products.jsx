@@ -147,7 +147,7 @@ const Products = () => {
         <>
             <div className='flex justify-between'>
                 <div className=''>
-                    <h1 className='text-4xl'>Katalog</h1>
+                    <h1 className='text-4xl'>Products</h1>
                 </div>
                 <div className='flex '>
                     <select id='1' className='border-none pr-4 text-xl'>
@@ -196,6 +196,12 @@ const Products = () => {
                         <PlusOutlined className='mr-2' />
                         Yaratish
                     </button>
+                </div>
+                <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
+                    <button>Eksport</button>
+                </div>
+                <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
+                    <button>Import</button>
                 </div>
             </div>
 
