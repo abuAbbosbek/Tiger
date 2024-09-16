@@ -4,6 +4,7 @@ import Products from "../goods/products";
 import Repricing from "../goods/repricing";
 import WriteOff from "../goods/writeoff";
 import ShopChildreanPage from "../hisobotlar/children/shop";
+import HomePage from "../home/homepage";
 import Employees from "../management/employees";
 import Customers from "../mijozlar/mijozlar";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
@@ -71,5 +72,10 @@ export const menu = [
         id: 12,
         path: "/katalog",
         element: <Katalog />,
+    },
+    {
+        id: 13,
+        path: "/home",
+        element: <HomePage />,
     }
 ];

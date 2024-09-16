@@ -1,15 +1,17 @@
 import { Layout, Menu, theme } from "antd";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, } from "react-router-dom";
 import { MenuList } from "../../pages/ruoter/menu";
 import { menu } from "../../pages/ruoter/routes";
 // import UserProfile from "../../pages/goods/userprofile";
 import { Header } from "antd/es/layout/layout";
+
 
 const { Content, Footer, Sider } = Layout;
 const Dashboard = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
 
     // let name = "sd";
     // let email = "sd";
@@ -26,7 +28,7 @@ const Dashboard = () => {
                             color: "white",
                             fontSize: "24px",
                         }}>
-                        Tiger
+                        <Link to="/home">Tiger</Link>
                     </Header>
                     <Menu
                         className='flex-grow'

@@ -1,11 +1,13 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SignIn({ onSignUpClick }) {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const Homepage = useNavigate("/home");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,6 +29,7 @@ function SignIn({ onSignUpClick }) {
 
             if (response.ok) {
                  localStorage.setItem("accessToken",data.token)
+                 Homepage('/home')
                  window.location.reload();
             } else {
                 setError(data.message || "Login failed");
