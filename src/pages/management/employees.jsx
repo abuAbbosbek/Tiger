@@ -261,28 +261,7 @@ const Employees = () => {
                     }}
                     placeholder='Passport seriyasi'
                 />
-                {/* <Input
-                    className='mb-5'
-                    value={editedData.login}
-                    onChange={(e) =>
-                        setEditedData({
-                            ...editedData,
-                            login: e.target.value,
-                        })
-                    }
-                    placeholder='Login'
-                /> */}
-                {/* <Input
-                    className='mb-5'
-                    value={editedData.password}
-                    onChange={(e) =>
-                        setEditedData({
-                            ...editedData,
-                            password: e.target.value,
-                        })
-                    }
-                    placeholder='Password'
-                /> */}
+                
             </Modal>
         </>
     );

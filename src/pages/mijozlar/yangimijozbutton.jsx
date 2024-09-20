@@ -97,7 +97,7 @@ const Sidebar = () => {
                         name='chevron-left'
                         type='solid'
                         color='#ffffff'></box-icon>
-                    <h1 className='text-lg font-semibold'>Ortga</h1>
+                    <h1 className='text-lg font-semibold'>Orqaga</h1>
                 </button>
                 <button className='flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors'>
                     <h1 className='text-lg font-semibold'>Yaratish</h1>
@@ -282,41 +282,6 @@ const Sidebar = () => {
                             </div>
 
                             <div className='flex gap-10'>
-                                <div>
-                                    <h1 className='text-xl mt-5'>
-                                        Oilaviy ahvol
-                                    </h1>
-                                    <div className='flex items-center mt-5'>
-                                        <div className='bg-gray-200 p-1 rounded-2xl flex '>
-                                            <button
-                                                className={`px-2 py-2 rounded-2xl focus:outline-none w-[300px] text-xl ${
-                                                    activeTab1 ===
-                                                    "Turmushdaemas"
-                                                        ? "bg-white"
-                                                        : ""
-                                                }`}
-                                                onClick={() =>
-                                                    setActiveTab1(
-                                                        "Turmushdaemas"
-                                                    )
-                                                }>
-                                                Turmushda emas
-                                            </button>
-                                            <button
-                                                className={`px-2 py-2 rounded-2xl focus:outline-none w-[300px] text-xl ${
-                                                    activeTab1 === "Turmushda"
-                                                        ? "bg-white"
-                                                        : ""
-                                                }`}
-                                                onClick={() =>
-                                                    setActiveTab1("Turmushda")
-                                                }>
-                                                Turmushda
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div>
                                     <h1 className='text-xl mt-5'>
                                         Suhbat tili
