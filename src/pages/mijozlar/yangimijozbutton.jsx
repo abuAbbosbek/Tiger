@@ -97,7 +97,7 @@ const Sidebar = () => {
                         name='chevron-left'
                         type='solid'
                         color='#ffffff'></box-icon>
-                    <h1 className='text-lg font-semibold'>Yangi Mijoz</h1>
+                    <h1 className='text-lg font-semibold'>Ortga</h1>
                 </button>
                 <button className='flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors'>
                     <h1 className='text-lg font-semibold'>Yaratish</h1>

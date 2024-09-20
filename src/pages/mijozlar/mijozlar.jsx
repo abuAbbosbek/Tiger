@@ -18,21 +18,20 @@ const Customers = () => {
     };
 
     const [data, setData] = useState();
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]); 
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-    
-        useEffect(() => {
-            axios
-                .get("http://localhost:3001/clients/all")
-                .then((res) => setData(res.data.client))
-                .catch((err) => console.log(err));  
-        },);
-    
+    useEffect(() => {
+        axios
+            .get("http://localhost:3001/clients/all")
+            .then((res) => setData(res.data.getAllClients))
+            .catch((err) => console.log(err));
+    });
+
     const handleDelete = () => {
         Promise.all(
             selectedRowKeys.map((id) =>
                 axios
-                    .delete(`http://localhost:3001/user/delete/:${id}`)
+                    .delete(`http://localhost:3001/clients/delete/:${id}`)
                     .then((res) => {
                         console.log(res.data.massage); // O'chirilgan ma'lumot
                     })
@@ -46,8 +45,8 @@ const Customers = () => {
                     "Tanlangan elementlar muvaffaqiyatli o'chirildi"
                 );
                 // O'chirilganidan keyin API orqali yangi ma'lumotlarni olish
-                axios.get("http://localhost:3001/product/all").then((res) => {
-                    setData(res.data.product); // Backenddan olingan yangi ma'lumotlarni yuklash
+                axios.get("http://localhost:3001/clients/all").then((res) => {
+                    setData(res.data.clients); // Backenddan olingan yangi ma'lumotlarni yuklash
                 });
                 setSelectedRowKeys([]); // Checkboxni tozalash
             })
@@ -62,9 +61,9 @@ const Customers = () => {
             setSelectedRowKeys(selectedRowKeys);
         },
     };
-    
+
     console.log(data);
-    
+
     return (
         <>
             <div className='flex justify-between'>

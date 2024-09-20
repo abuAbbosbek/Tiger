@@ -325,21 +325,45 @@ export const clientstable = [
         key: "name",
     },
     {
+        title: "Nick name",
+        dataIndex: "Nick_name",
+    },
+    {
         title: "F.I.SH",
-        dataIndex: "Name",
+        dataIndex: "Full_name",
         key: "name",
     },
     {
-        title: "Summa",
-        dataIndex: "Summa",
-        key: "Summa",
+        title: "Passport",
+        dataIndex: "Passport",
+    },
+    {
+        title: "Tug'ilgan yili",
+        dataIndex: "Date_of_birth",
+    },
+    {
+        title: "Jinsi",
+        dataIndex: "Sex",
+    },
+    {
+        title: "Telefon nomer 1",
+        dataIndex: "Phone_num1",
+    },
+    {
+        title: "Telefon nomer 2",
+        dataIndex: "Phone_num2",
+    },
+    {
+        title: "Yashash joyi",
+        dataIndex: "Adress",
     },
     {
         title: "Yaratilgan vaqt",
-        dataIndex: "TimeLimit",
+        dataIndex: "created",
+        key: "created",
+        render: (text) => formatDateTime(text),
     },
 ];
-
 
 export const katalog = [
     {

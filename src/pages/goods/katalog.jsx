@@ -8,7 +8,7 @@ import { Input, message, Modal, Table } from "antd";
 import { katalog } from "../table/table";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import Search from "antd/lib/input/Search"; // Search komponentini import qilamiz
 const Katalog = () => {
     const [data, setData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
@@ -68,7 +68,7 @@ const Katalog = () => {
     const handleSave = () => {
         axios
             .put(
-                `http://localhost:3001/category/put/${editingEmployee.id}`,
+                `http://localhost:3001/category/update/${editingEmployee.id}`,
                 editedData
             )
             .then(() => {
@@ -153,39 +153,32 @@ const Katalog = () => {
                 </div>
             </div>
 
-            <div className='mt-7 flex'>
-                <div>
-                    <input
-                        className='text-xl px-3 py-3 w-[700px] rounded-md bg-slate-100'
-                        type='search'
-                        placeholder='Artikl, Shtrix-kod, Nomi'
+            <div className='mt-7 flex flex-wrap items-center gap-5'>
+                <div className='w-full sm:w-auto'>
+                    <Search
+                        placeholder='input search text'
+                        // onSearch={}
+                        enterButton
+                        className='w-full sm:w-auto rounded-md text-xl'
+                        size='large'
+                        style={{
+                            width: "300px",
+                        }}
                     />
-                    <select
-                        id='1'
-                        className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
-                        <option> Filtrlar</option>
-                        <option value=''>sdas</option>
-                    </select>
                 </div>
-                <div className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
-                    <button>
-                        <CodeSandboxOutlined className='mr-2' />
-                        Harakatlar
-                    </button>
-                </div>
-                <div
-                    className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'
-                    onClick={handleAddProduct}>
-                    <button>
+                <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
+                    <button
+                        className='w-full h-full'
+                        onClick={handleAddProduct}>
                         <PlusOutlined className='mr-2' />
                         Yaratish
                     </button>
                 </div>
-                <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
-                    <button>Eksport</button>
+                <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
+                    <button className='w-full h-full'>Eksport</button>
                 </div>
-                <div className='px-3  bg-sky-500 text-xl py-3 rounded-md ml-5'>
-                    <button>Import</button>
+                <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
+                    <button className='w-full h-full'>Import</button>
                 </div>
             </div>
 
