@@ -3,18 +3,21 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Input, Modal, Table, message } from "antd";
+import { Input, Modal, Select, Table, message } from "antd";
 import { columns } from "../table/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Search from "antd/lib/input/Search"; // Search komponentini import qilamiz
+import { Option } from "antd/lib/mentions";
 
 const Products = () => {
     const [data, setData] = useState([]);
+    const [excel, setExcel] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
     const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
-    const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini boshqarish
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini boshq
+    const [category, setCategory] = useState([]);
     const [editedData, setEditedData] = useState({
         name: "",
         price: "",
@@ -36,6 +39,12 @@ const Products = () => {
             .then((res) => setData(res.data.product))
             .catch((err) => console.log(err));
     }, []);
+
+  const handleExport = () => {
+      console.log("Export boshlanmoqda...");
+      // Excel faylini yuklab olish
+      window.open("http://localhost:3001/product/exportToExcel", "_blank");
+  };
 
     const handleDelete = () => {
         Promise.all(
@@ -136,6 +145,21 @@ const Products = () => {
             });
     };
 
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/category/all"
+                );
+                setCategory(response.data.AllCategory); // API'dan kelgan kategoriyalarni saqlaymiz
+            } catch (error) {
+                console.error("Kategoriyalarni yuklashda xatolik:", error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
     const rowSelection = {
         selectedRowKeys,
         onChange: (selectedRowKeys) => {
@@ -195,9 +219,12 @@ const Products = () => {
                         Yaratish
                     </button>
                 </div>
-                <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button className='w-full h-full'>Eksport</button>
+                <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
+                    <button className='w-full h-full' onClick={handleExport}>
+                        Export
+                    </button>
                 </div>
+
                 <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
                     <button className='w-full h-full'>Import</button>
                 </div>
@@ -281,54 +308,73 @@ const Products = () => {
                 open={isAddModalVisible}
                 onOk={handleAddNewProduct}
                 onCancel={() => setIsAddModalVisible(false)}>
-                <Input
-                    className='mb-5'
-                    value={newProduct.name}
-                    onChange={(e) =>
-                        setNewProduct({ ...newProduct, name: e.target.value })
-                    }
-                    placeholder='Tovar nomi'
-                />
-                <Input
-                    className='mb-5'
-                    value={newProduct.quantity}
-                    onChange={(e) =>
-                        setNewProduct({
-                            ...newProduct,
-                            quantity: e.target.value,
-                        })
-                    }
-                    placeholder='Soni'
-                />
-                <Input
-                    className='mb-5'
-                    value={newProduct.description}
-                    onChange={(e) =>
-                        setNewProduct({
-                            ...newProduct,
-                            description: e.target.value,
-                        })
-                    }
-                    placeholder='Tavsifi'
-                />
-                <Input
-                    className='mb-5'
-                    value={newProduct.price}
-                    onChange={(e) =>
-                        setNewProduct({ ...newProduct, price: e.target.value })
-                    }
-                    placeholder='Narxi'
-                />
-                <Input
-                    className='mb-5'
-                    value={newProduct.category_id}
-                    onChange={(e) =>
-                        setNewProduct({
-                            ...newProduct,
-                            category_id: e.target.value,
-                        })
-                    }
-                />
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault(); // Standart form yuborilishini bloklaymiz
+                        handleAddNewProduct(); // Enter bosilganda handleAddNewProduct funksiyasini chaqiramiz
+                    }}>
+                    <Input
+                        className='mb-5'
+                        value={newProduct.name}
+                        onChange={(e) =>
+                            setNewProduct({
+                                ...newProduct,
+                                name: e.target.value,
+                            })
+                        }
+                        placeholder='Tovar nomi'
+                    />
+                    <Input
+                        className='mb-5'
+                        value={newProduct.quantity}
+                        onChange={(e) =>
+                            setNewProduct({
+                                ...newProduct,
+                                quantity: e.target.value,
+                            })
+                        }
+                        placeholder='Soni'
+                    />
+                    <Input
+                        className='mb-5'
+                        value={newProduct.description}
+                        onChange={(e) =>
+                            setNewProduct({
+                                ...newProduct,
+                                description: e.target.value,
+                            })
+                        }
+                        placeholder='Tavsifi'
+                    />
+                    <Input
+                        className='mb-5'
+                        value={newProduct.price}
+                        onChange={(e) =>
+                            setNewProduct({
+                                ...newProduct,
+                                price: e.target.value,
+                            })
+                        }
+                        placeholder='Narxi'
+                    />
+                    <Select
+                        id='category'
+                        className='mb-5 w-full'
+                        value={newProduct.category_id}
+                        onChange={(value) =>
+                            setNewProduct({
+                                ...newProduct,
+                                category_id: value,
+                            })
+                        }>
+                        <Option value=''>Kategoriya tanlang</Option>
+                        {category.map((category) => (
+                            <Option key={category.id} value={category.id}>
+                                {category.name}
+                            </Option>
+                        ))}
+                    </Select>
+                </form>
             </Modal>
         </>
     );

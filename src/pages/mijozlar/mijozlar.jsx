@@ -4,19 +4,22 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Input, message, Modal, Table } from "antd";
+import { Button, Input, message, Modal, Select, Table } from "antd";
 import { clientstable } from "../table/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Search from "antd/lib/input/Search";
-import Password from "antd/es/input/Password";
+import { set } from "date-fns";
 
+const { Option } = Select;
 const Customers = () => {
     const [data, setData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
     const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
-    const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini boshqarish
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini
+    const [searchTerm, setSearchTerm] = useState("");
+    const [results, setResults] = useState([]);
     const [editedData, setEditedData] = useState({
         Nick_name: "",
         Full_name: "",
@@ -109,6 +112,32 @@ const Customers = () => {
     };
 
     const handleAddNewProduct = () => {
+        const {
+            Nick_name,
+            Full_name,
+            Passport,
+            Date_of_birth,
+            Sex,
+            Phone_num1,
+            Phone_num2,
+            Adress,
+        } = newProduct;
+
+        // Inputlarni tekshirish
+        if (
+            !Nick_name ||
+            !Full_name ||
+            !Passport ||
+            !Date_of_birth ||
+            !Sex ||
+            !Phone_num1 ||
+            !Phone_num2 ||
+            !Adress
+        ) {
+            message.error("Iltimos, barcha maydonlarni to'ldiring.");
+            return; // Agar to'ldirilmagan maydon bo'lsa, funksiyani to'xtatamiz
+        }
+
         axios
             .post("http://localhost:3001/clients/create", newProduct)
             .then(() => {
@@ -126,7 +155,6 @@ const Customers = () => {
                     });
 
                 setNewProduct({
-                    id: "",
                     Nick_name: "",
                     Full_name: "",
                     Passport: "",
@@ -144,6 +172,35 @@ const Customers = () => {
                 console.log(err);
             });
     };
+
+    const handleSearch = async () => {
+        if (!searchTerm) {
+            // Agar qidirish termi bo'sh bo'lsa, barcha ma'lumotlarni ko'rsatish
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/clients/all"
+                );
+                setResults(response.data.getAllClients);
+            } catch (error) {
+                console.error("Barcha ma'lumotlarni olishda xatolik:", error);
+            }
+        } else {
+            // Aks holda qidirish
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/clients/search",
+                    {
+                        params: { searchTerm },
+                    }
+                );
+                setResults(response.data.clients);
+            } catch (error) {
+                console.error("Qidirish natijalarini olishda xatolik:", error);
+            }
+        }
+    };
+
+    console.log(results);
 
     const rowSelection = {
         selectedRowKeys,
@@ -184,15 +241,16 @@ const Customers = () => {
                 <div className='w-full sm:w-auto'>
                     <Search
                         placeholder='input search text'
-                        // onSearch={}
-                        enterButton
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full sm:w-auto rounded-md text-xl'
                         size='large'
-                        style={{
-                            width: "300px",
-                        }}
+                        style={{ width: "300px" }}
+                        onSearch={handleSearch}
+                        onPressEnter={handleSearch}
                     />
                 </div>
+
                 <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
                     <button
                         className='w-full h-full'
@@ -220,7 +278,7 @@ const Customers = () => {
                             ),
                         },
                     ]}
-                    dataSource={data}
+                    dataSource={results.length > 0 ? results : data}
                     rowKey={(record) => record.id}
                     rowSelection={rowSelection}
                 />
@@ -267,6 +325,7 @@ const Customers = () => {
                 />
                 <Input
                     className='mb-5'
+                    type='date'
                     value={editedData.Date_of_birth}
                     onChange={(e) =>
                         setEditedData({
@@ -289,24 +348,51 @@ const Customers = () => {
                 />
                 <Input
                     className='mb-5'
-                    value={editedData.Phone_num1}
-                    onChange={(e) =>
-                        setEditedData({
-                            ...editedData,
-                            Phone_num1: e.target.value,
-                        })
-                    }
+                    value={editedData.Phone_num1} // Yangi state
+                    onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, ""); // Faqat raqamlarni saqlaydi
+
+                        // +998 bilan boshlanishi uchun
+
+                        // Formatlash
+                        let formattedValue = value.replace(
+                            /(\+\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
+                            "$1 $2 $3 $4 $5"
+                        );
+
+                        // State-ni yangilash
+                        setEditedData((prevData) => ({
+                            ...prevData,
+                            Phone_num1: formattedValue, // newProduct ichidagi Phone_num1-ni yangilaydi
+                        }));
+                    }}
+                    maxLength={9}
+                    required
                     placeholder='Telefon nomer 1'
                 />
+
                 <Input
                     className='mb-5'
-                    value={editedData.Phone_num2}
-                    onChange={(e) =>
-                        setEditedData({
-                            ...editedData,
-                            Phone_num2: e.target.value,
-                        })
-                    }
+                    value={editedData.Phone_num2} // Yangi state
+                    onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, ""); // Faqat raqamlarni saqlaydi
+
+                        // +998 bilan boshlanishi uchun
+
+                        // Formatlash
+                        let formattedValue = value.replace(
+                            /(\+\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
+                            "$1 $2 $3 $4 $5"
+                        );
+
+                        // State-ni yangilash
+                        setEditedData((prevData) => ({
+                            ...prevData,
+                            Phone_num2: formattedValue, // newProduct ichidagi Phone_num1-ni yangilaydi
+                        }));
+                    }}
+                    maxLength={9}
+                    required
                     placeholder='Telefon nomer 2'
                 />
                 <Input
@@ -355,18 +441,10 @@ const Customers = () => {
                     value={newProduct.Passport}
                     onChange={(e) => {
                         let value = e.target.value.toUpperCase();
-
-                        // Birinchi 2 ta belgini harflarga cheklash
                         let letters = value.slice(0, 2).replace(/[^A-Z]/g, "");
-
-                        // Keyingi belgilarni raqamlarga cheklash
                         let numbers = value.slice(2).replace(/[^0-9]/g, "");
-
-                        // Belgilarni 2 ta harf va 5 ta raqamga cheklash
                         let Passport = letters + numbers.slice(0, 7);
-
-                        // Passport seriyasini yangilash va editedData'ni yangilash
-                        newProduct({
+                        setNewProduct({
                             ...newProduct,
                             Passport: Passport,
                         });
@@ -375,48 +453,83 @@ const Customers = () => {
                 />
                 <Input
                     className='mb-5'
+                    type='date' // Yilni raqamli formatda kiritish
                     value={newProduct.Date_of_birth}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                        const value = e.target.value;
+
+                        // Faqat 4 raqamli yil kiritish imkonini berish
+
                         setNewProduct({
                             ...newProduct,
-                            Date_of_birth: e.target.value,
-                        })
-                    }
+                            Date_of_birth: value,
+                        });
+                    }}
                     placeholder="Tug'ilgan yili"
                 />
                 <Input
                     className='mb-5'
+                    value={newProduct.Phone_num1} // Yangi state
+                    onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, ""); // Faqat raqamlarni saqlaydi
+
+                        // +998 bilan boshlanishi uchun
+
+                        // Formatlash
+                        let formattedValue = value.replace(
+                            /(\+\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
+                            "$1 $2 $3 $4 $5"
+                        );
+
+                        // State-ni yangilash
+                        setNewProduct((prevData) => ({
+                            ...prevData,
+                            Phone_num1: formattedValue, // newProduct ichidagi Phone_num1-ni yangilaydi
+                        }));
+                    }}
+                    maxLength={9}
+                    required
+                    placeholder='Telefon nomer 1'
+                />
+
+                <Input
+                    className='mb-5'
+                    value={newProduct.Phone_num2} // Yangi state
+                    onChange={(e) => {
+                        let value = e.target.value.replace(/\D/g, ""); // Faqat raqamlarni saqlaydi
+
+                        // +998 bilan boshlanishi uchun
+
+                        // Formatlash
+                        let formattedValue = value.replace(
+                            /(\+\d{3})(\d{2})(\d{3})(\d{2})(\d{2})/,
+                            "$1 $2 $3 $4 $5"
+                        );
+
+                        // State-ni yangilash
+                        setNewProduct((prevData) => ({
+                            ...prevData,
+                            Phone_num2: formattedValue, // newProduct ichidagi Phone_num1-ni yangilaydi
+                        }));
+                    }}
+                    maxLength={9}
+                    required
+                    placeholder='Telefon nomer 2'
+                />
+                <Select
+                    className='mb-5'
                     value={newProduct.Sex}
-                    onChange={(e) =>
+                    onChange={(value) =>
                         setNewProduct({
                             ...newProduct,
-                            Sex: e.target.value,
+                            Sex: value,
                         })
                     }
                     placeholder='Jinsi'
-                />
-                <Input
-                    className='mb-5'
-                    value={newProduct.Phone_num1}
-                    onChange={(e) =>
-                        setNewProduct({
-                            ...newProduct,
-                            Phone_num1: e.target.value,
-                        })
-                    }
-                    placeholder='Telefon nomer 1'
-                />
-                <Input
-                    className='mb-5'
-                    value={newProduct.Phone_num2}
-                    onChange={(e) =>
-                        setNewProduct({
-                            ...newProduct,
-                            Phone_num2: e.target.value,
-                        })
-                    }
-                    placeholder='Telefon nomer 2'
-                />
+                    style={{ width: "100%" }}>
+                    <Option value='Erkak'>Erkak</Option>
+                    <Option value='Ayol'>Ayol</Option>
+                </Select>
                 <Input
                     className='mb-5'
                     value={newProduct.Adress}
