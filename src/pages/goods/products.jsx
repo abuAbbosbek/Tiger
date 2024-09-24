@@ -40,11 +40,11 @@ const Products = () => {
             .catch((err) => console.log(err));
     }, []);
 
-  const handleExport = () => {
-      console.log("Export boshlanmoqda...");
-      // Excel faylini yuklab olish
-      window.open("http://localhost:3001/product/exportToExcel", "_blank");
-  };
+    const handleExport = () => {
+        console.log("Export boshlanmoqda...");
+        // Excel faylini yuklab olish
+        window.open("http://localhost:3001/product/exportToExcel", "_blank");
+    };
 
     const handleDelete = () => {
         Promise.all(
@@ -201,7 +201,7 @@ const Products = () => {
             <div className='mt-7 flex flex-wrap items-center gap-5'>
                 <div className='w-full sm:w-auto'>
                     <Search
-                        placeholder='input search text'
+                        placeholder=''
                         onSearch={onSearch}
                         enterButton
                         className='w-full sm:w-auto rounded-md text-xl'

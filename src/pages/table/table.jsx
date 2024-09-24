@@ -383,3 +383,22 @@ export const katalog = [
         render: (text) => formatDateTime(text),
     },
 ];
+
+export const newsales = [
+    {
+        title: "Turkum",
+        dataIndex: "product_id",
+    },
+    {
+        title: "Soni",
+        dataIndex: "quantity",
+    },
+    {
+        title: "",
+        dataIndex: "customer_name",
+    },
+    {
+        title: "Summasi",
+        dataIndex: "price",
+    }
+];

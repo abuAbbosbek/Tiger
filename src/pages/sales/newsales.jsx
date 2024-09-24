@@ -1,10 +1,98 @@
-import { Switch } from "antd";
+import { Input, Modal, Select, Switch, Table, message } from "antd";
+import axios from "axios";
 import "boxicons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { newsales } from "../table/table";
+import { Option } from "antd/lib/mentions";
 const NewSales = () => {
+    const [data, setData] = useState([]);
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+    const [product, setProduct] = useState([]);
+    const [customer, setCustomer] = useState([]);
+    const [newProduct, setNewProduct] = useState({
+        product_id: "",
+        quantity: "",
+        customer_name: "",
+    });
 
-    const [active, setActive] = useState("%");
+    const handleAddProduct = () => {
+        setIsAddModalVisible(true);
+    };
 
+    const handleAddNewProduct = () => {
+        const { product_id, quantity, customer_name } = newProduct;
+
+        // Inputlarni tekshirish
+        if (!product_id || !quantity || !customer_name) {
+            message.error("Iltimos, barcha maydonlarni to'ldiring.");
+            return; // Agar to'ldirilmagan maydon bo'lsa, funksiyani to'xtatamiz
+        }
+
+        axios
+            .post("http://localhost:3001/sale/newsale", newProduct)
+            .then((response) => {
+                message.success("Yangi mahsulot muvaffaqiyatli qo'shildi");
+
+                // Yangi mahsulot qo'shilgandan keyin barcha mahsulotlarni qayta yuklash
+                axios
+                    .get("http://localhost:3001/clients/all")
+                    .then((res) => {
+                        setData(res.data.getAllClients);
+                    })
+                    .catch((err) => {
+                        message.error("Mahsulotlarni yuklashda xatolik");
+                        console.log(err);
+                    });
+
+                // Yangi mahsulotni data holatiga qo'shish
+                setData((prevData) => [
+                    ...prevData,
+                    { id: response.data.id, ...newProduct }, // Yangi mahsulotni qo'shish
+                ]);
+
+                setNewProduct({
+                    product_id: "",
+                    quantity: "",
+                    customer_name: "",
+                });
+
+                setIsAddModalVisible(false);
+            })
+            .catch((err) => {
+                message.error("Mahsulotni qo'shishda xatolik yuz berdi");
+                console.log(err);
+            });
+    };
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/product/all"
+                );
+                setProduct(response.data.product); // API'dan kelgan kategoriyalarni saqlaymiz
+            } catch (error) {
+                console.error("Kategoriyalarni yuklashda xatolik:", error);
+            }
+        };
+
+        fetchProduct();
+    }, []);
+
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/clients/all"
+                );
+                setCustomer(response.data.getAllClients); // API'dan kelgan kategoriyalarni saqlaymiz
+            } catch (error) {
+                console.error("Kategoriyalarni yuklashda xatolik:", error);
+            }
+        };
+
+        fetchCustomers();
+    }, []);
     return (
         <>
             <div className='flex '>
@@ -17,27 +105,7 @@ const NewSales = () => {
                                     type='search'
                                     placeholder='Artikl, Shtrix-kod, Nomi'
                                 />
-                                {/* <span className='flex gap-1 text-xl mt-2 absolute opacity-90'>
-                                    Bosing <p>/</p>
-                                </span> */}
                             </div>
-                        </div>
-                        <div className='gap'>
-                            <button className='px-3 py-3 border-2 rounded-md bg-slate-50 ml-2'>
-                                <box-icon
-                                    name='credit-card'
-                                    color='#439bef'></box-icon>
-                            </button>
-                            <button className='px-3 py-3 border-2 rounded-md bg-slate-50 ml-2'>
-                                <box-icon
-                                    name='transfer-alt'
-                                    color='#439bef'></box-icon>
-                            </button>
-                            <button className='px-3 py-3 border-2 rounded-md bg-slate-50 ml-2'>
-                                <box-icon
-                                    name='hourglass'
-                                    color='#439bef'></box-icon>
-                            </button>
                         </div>
                     </div>
 
@@ -53,9 +121,6 @@ const NewSales = () => {
                                 </h1>
                             </div>
                         </div>
-                        <div>
-                            <h1 className='text-4xl text-gray-400'>#993574</h1>
-                        </div>
                     </div>
 
                     <div className='flex mt-5 mb-5 '>
@@ -65,7 +130,9 @@ const NewSales = () => {
                             </button>
                         </div>
                         <div>
-                            <button className='text-xl bg-gray-100 px-4 py-2.5 rounded-xl ml-5 text-center items-center flex'>
+                            <button
+                                onClick={handleAddProduct}
+                                className='text-xl bg-gray-100 px-4 py-2.5 rounded-xl ml-5 text-center items-center flex'>
                                 <box-icon
                                     name='plus-circle'
                                     type='solid'
@@ -75,9 +142,29 @@ const NewSales = () => {
                     </div>
 
                     <div className='w-full h-96  rounded-xl border-2 shadow-md'>
-                        <h1 className='text-center mt-[170px] justify-center text-xl'>
-                            Savatcha hozircha bo`sh
-                        </h1>
+                        <div>
+                            <Table
+                                columns={[
+                                    ...newsales,
+                                    {
+                                        title: "Amallar",
+                                        render: (record) => (
+                                            <button
+                                                onClick={() =>
+                                                    handleEdit(record)
+                                                }>
+                                                <box-icon
+                                                    name='edit-alt'
+                                                    type='solid'
+                                                    color='#0284c7'></box-icon>
+                                            </button>
+                                        ),
+                                    },
+                                ]}
+                                dataSource={data}
+                                rowKey={(record) => record.id}
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -87,104 +174,42 @@ const NewSales = () => {
                     <div>
                         <div className='flex justify-between mb-5'>
                             <div className='items-center'>
-                                <h1 className='text-2xl'>
-                                    Mijoz{" "}
-                                    <span className='text-xl text-slate-500 px-2 border-2 border-gray rounded-md text-center ml-2'>
-                                        J
-                                    </span>
-                                </h1>
+                                <h1 className='text-2xl'>Mijoz </h1>
                             </div>
                             <div className='text-xl mt-1 text-sky-500'>
                                 <a href='#'>Yaratish</a>
                             </div>
                         </div>
-                        <div className='mb-7'>
-                            <div className='relative'>
-                                <input
-                                    type='search'
-                                    placeholder='Mijozni ismi yoki telefon rqamini kiriting...'
-                                    className='pl-10 border border-gray-300 text-xl px-3 py-3 w-full rounded-md bg-slate-100'
-                                />
-                                <span className='absolute inset-y-0 left-0 flex items-center pl-3'>
-                                    <box-icon
-                                        name='user'
-                                        color='#439bef'></box-icon>
-                                </span>
-                            </div>
-                        </div>
 
-                        <div className='flex justify-between mb-5'>
-                            <div className='items-center'>
-                                <h1 className='text-2xl'>
-                                    Chegirma{" "}
-                                    <span className='text-xl text-slate-500 px-2 border-2 border-gray rounded-md text-center ml-2'>
-                                        K
-                                    </span>
-                                </h1>
-                            </div>
-                            <div className='text-xl mt-1 text-sky-500'>
-                                <a href='#'>Kodni kiritish</a>
-                            </div>
-                        </div>
-
-                        <div className='flex justify-between'>
-                            <div>
-                                <button className='px-3 py-3 border-2 rounded-xl bg-slate-50 text-xl'>
-                                    Chegirmani kiriting
-                                </button>
-                            </div>
-                            <div className='inline-flex rounded-full bg-gray-100 p-1'>
-                                <button
-                                    onClick={() => setActive("%")}
-                                    className={`py-2 px-6 rounded-full font-medium ${
-                                        active === "%"
-                                            ? "bg-white text-gray-800"
-                                            : "text-gray-500"
-                                    }`}>
-                                    %
-                                </button>
-                                <button
-                                    onClick={() => setActive("UZS")}
-                                    className={`py-2 px-4 rounded-full font-medium ${
-                                        active === "UZS"
-                                            ? "bg-white text-gray-800"
-                                            : "text-gray-500"
-                                    }`}>
-                                    UZS
-                                </button>
-                            </div>
-                        </div>
-                        <div className='flex mt-2 justify-between'>
-                            <div className=''>
-                                <button className='px-3 py-1 border-1 rounded-xl bg-slate-50 text-xl'>
-                                    50K
-                                </button>
-                            </div>
-                            <div className=''>
-                                <button className='px-3 py-1 border-1 rounded-xl bg-slate-50 text-xl'>
-                                    100K
-                                </button>
-                            </div>
-                            <div className=''>
-                                <button className='px-3 py-1 border-1 rounded-xl bg-slate-50 text-xl'>
-                                    500K
-                                </button>
-                            </div>
-                            <div className=''>
-                                <button className='px-3 py-1 border-1 rounded-xl bg-slate-50 text-xl'>
-                                    1M
-                                </button>
-                            </div>
-                        </div>
-                        <div className='mt-10 justify-center flex'>
-                            <button className='px-4 py-3 border-1 rounded-xl bg-slate-50 text-xl items-center flex text-sky-500'>
-                                {" "}
-                                <box-icon
-                                    name='plus'
-                                    color='#439bef'></box-icon>{" "}
-                                Eslatmani qo`shish
-                            </button>
-                        </div>
+                        <Select
+                            id='customer'
+                            className='mb-5 w-full'
+                            placeholder='Mijozni tanlang'
+                            value={newProduct.customer_name}
+                            onChange={(value) =>
+                                setNewProduct({
+                                    ...newProduct,
+                                    customer_name: value,
+                                })
+                            }
+                            showSearch
+                            optionFilterProp='children'
+                            filterOption={(input, option) =>
+                                option.children
+                                    .toLowerCase()
+                                    .includes(input.toLowerCase())
+                            }
+                            dropdownStyle={{
+                                maxHeight: "200px",
+                                overflowY: "auto",
+                            }}>
+                            {/* <Option value=''>Mijozni tanlang</Option> */}
+                            {customer.map((customer) => (
+                                <Option key={customer.id} value={customer.id}>
+                                    {customer.Full_name}
+                                </Option>
+                            ))}
+                        </Select>
 
                         <div className='bg-white rounded-xl px-4 py-4 mt-4 shadow-md border-2 '>
                             <div className='flex justify-between'>
@@ -204,9 +229,6 @@ const NewSales = () => {
                             <div className='flex justify-between mt-4 bg-slate-300 rounded-xl px-4 py-3 w-full'>
                                 <h1 className='text-xl mb-2 text-white'>
                                     To`lash{" "}
-                                    <span className='text-xl text-white px-2  border-2 border-gray rounded-md text-center ml-2'>
-                                        L
-                                    </span>
                                 </h1>
                                 <h1 className='text-xl text-white'>0 UZS</h1>
                             </div>
@@ -223,6 +245,102 @@ const NewSales = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Yangi mahsulot qo'shish modali */}
+            <Modal
+                title="Yangi mahsulot qo'shish"
+                open={isAddModalVisible}
+                onOk={handleAddNewProduct}
+                onCancel={() => setIsAddModalVisible(false)}>
+                <Select
+                    id='product'
+                    className='mb-5 w-full'
+                    value={newProduct.product_id}
+                    onChange={(value) =>
+                        setNewProduct({
+                            ...newProduct,
+                            product_id: value,
+                        })
+                    }>
+                    <Option value=''>Kategoriya tanlang</Option>
+                    {product.map((product) => (
+                        <Option key={product.id} value={product.id}>
+                            {product.name}
+                        </Option>
+                    ))}
+                </Select>
+                <Input
+                    className='mb-5'
+                    value={newProduct.quantity}
+                    onChange={(e) =>
+                        setNewProduct({
+                            ...newProduct,
+                            quantity: e.target.value,
+                        })
+                    }
+                    placeholder='Soni'
+                />
+                {/* <Select
+                    id='product'
+                    className='mb-5 w-full'
+                    value={newProduct.customer_name}
+                    onChange={(value) =>
+                        setNewProduct({
+                            ...newProduct,
+                            customer_name: value,
+                        })
+                    }
+                    showSearch
+                    optionFilterProp='children'
+                    filterOption={(input, option) =>
+                        option.children
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                    }
+                    style={{ height: "30px" }} // Balandlikni 30px ga o'rnatish
+                    dropdownStyle={{ maxHeight: "200px", overflowY: "auto" }} // Ro'yxat balandligi va o'lchov
+                >
+                    <Option value=''>Kategoriya tanlang</Option>
+                    {customer
+                        .filter((customer) =>
+                            customer.Full_name.toLowerCase().includes(
+                                newProduct.customer_name.toLowerCase()
+                            )
+                        )
+                        .slice(0, 3)
+                        .map((customer) => (
+                            <Option key={customer.id} value={customer.id}>
+                                {customer.Full_name}
+                            </Option>
+                        ))}
+                </Select> */}
+                {/* <Select
+                    id='customer'
+                    className='mb-5 w-full'
+                    value={newProduct.customer_name}
+                    onChange={(value) =>
+                        setNewProduct({
+                            ...newProduct,
+                            customer_name: value,
+                        })
+                    }
+                    showSearch
+                    optionFilterProp='children'
+                    filterOption={(input, option) =>
+                        option.children
+                            .toLowerCase()
+                            .includes(input.toLowerCase())
+                    }
+                    dropdownStyle={{ maxHeight: "200px", overflowY: "auto" }} // Dropdown ro'yxatining maksimal balandligi
+                >
+                    <Option value=''>Mijozni tanlang</Option>
+                    {customer.map((customer) => (
+                        <Option key={customer.id} value={customer.id}>
+                            {customer.Full_name}
+                        </Option>
+                    ))}
+                </Select> */}
+            </Modal>
         </>
     );
 };

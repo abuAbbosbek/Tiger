@@ -4,14 +4,14 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Button, Input, message, Modal, Select, Table } from "antd";
+import { Button, Input, message, Modal, Select, Table, DatePicker } from "antd";
 import { clientstable } from "../table/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Search from "antd/lib/input/Search";
-import { set } from "date-fns";
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 const Customers = () => {
     const [data, setData] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
@@ -20,6 +20,7 @@ const Customers = () => {
     const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini
     const [searchTerm, setSearchTerm] = useState("");
     const [results, setResults] = useState([]);
+    const [dateRange, setDateRange] = useState([]);
     const [editedData, setEditedData] = useState({
         Nick_name: "",
         Full_name: "",
@@ -48,6 +49,15 @@ const Customers = () => {
             .then((res) => setData(res.data.getAllClients))
             .catch((err) => console.log(err));
     }, []);
+
+    // Qidiruv natijalarini olib kelish uchun useEffect
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            handleSearch();
+        }, 500); // 500ms kechikish
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchTerm]);
 
     const handleDelete = () => {
         Promise.all(
@@ -91,6 +101,7 @@ const Customers = () => {
                 editedData
             )
             .then(() => {
+                window.location.reload();
                 message.success("Ma'lumotlar muvaffaqiyatli yangilandi");
                 setData((prevData) =>
                     prevData.map((item) =>
@@ -175,17 +186,17 @@ const Customers = () => {
 
     const handleSearch = async () => {
         if (!searchTerm) {
-            // Agar qidirish termi bo'sh bo'lsa, barcha ma'lumotlarni ko'rsatish
+            // Agar qidiruv terimi bo'sh bo'lsa, barcha mijozlarni ko'rsatish
             try {
                 const response = await axios.get(
                     "http://localhost:3001/clients/all"
                 );
                 setResults(response.data.getAllClients);
             } catch (error) {
-                console.error("Barcha ma'lumotlarni olishda xatolik:", error);
+                console.error("Barcha mijozlarni olishda xatolik:", error);
             }
         } else {
-            // Aks holda qidirish
+            // Qidiruv natijalarini olish
             try {
                 const response = await axios.get(
                     "http://localhost:3001/clients/search",
@@ -195,9 +206,33 @@ const Customers = () => {
                 );
                 setResults(response.data.clients);
             } catch (error) {
-                console.error("Qidirish natijalarini olishda xatolik:", error);
+                console.error("Qidiruv natijalarini olishda xatolik:", error);
             }
         }
+    };
+
+    const handleDateFilter = () => {
+        if (!dateRange[0] || !dateRange[1]) {
+            message.error("Iltimos, boshlang'ich va tugash sanasini tanlang.");
+            return;
+        }
+
+        const startDate = dateRange[0].format("YYYY-MM-DD");
+        const endDate = dateRange[1].format("YYYY-MM-DD");
+
+        axios
+            .get("http://localhost:3001/clients/filterByDate", {
+                params: { startDate, endDate },
+            })
+            .then((res) => {
+                setResults(res.data.clients);
+            })
+            .catch((err) => {
+                message.error(
+                    "Sanalar bo'yicha filtrlashda xatolik yuz berdi."
+                );
+                console.error(err);
+            });
     };
 
     console.log(results);
@@ -240,7 +275,7 @@ const Customers = () => {
             <div className='mt-7 flex flex-wrap items-center gap-5'>
                 <div className='w-full sm:w-auto'>
                     <Search
-                        placeholder='input search text'
+                        placeholder='Nickname, F.I.SH, Passport, Tel'
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full sm:w-auto rounded-md text-xl'
@@ -251,14 +286,28 @@ const Customers = () => {
                     />
                 </div>
 
-                <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button
-                        className='w-full h-full'
-                        onClick={handleAddProduct}>
-                        <PlusOutlined className='mr-2' />
-                        Yaratish
-                    </button>
+                <div>
+                    <RangePicker
+                        onChange={(dates) => setDateRange(dates)} // Set the selected date range
+                        style={{ width: 300 }}
+                        s
+                        size='large'
+                    />
+                    <Button
+                        onClick={handleDateFilter}
+                        size='large'
+                        className='ml-2 bg-sky-500 text-black'>
+                        Filterlash
+                    </Button>
                 </div>
+
+                <Button
+                    className='bg-sky-500 text-black'
+                    size='large'
+                    onClick={handleAddProduct}>
+                    <PlusOutlined className='mr-2' />
+                    Yaratish
+                </Button>
             </div>
 
             <div>
@@ -335,17 +384,20 @@ const Customers = () => {
                     }
                     placeholder="Tug'ilgan yili"
                 />
-                <Input
+                <Select
                     className='mb-5'
                     value={editedData.Sex}
-                    onChange={(e) =>
+                    onChange={(value) =>
                         setEditedData({
                             ...editedData,
-                            Sex: e.target.value,
+                            Sex: value,
                         })
                     }
                     placeholder='Jinsi'
-                />
+                    style={{ width: "100%" }}>
+                    <Option value='Erkak'>Erkak</Option>
+                    <Option value='Ayol'>Ayol</Option>
+                </Select>
                 <Input
                     className='mb-5'
                     value={editedData.Phone_num1} // Yangi state
@@ -519,13 +571,13 @@ const Customers = () => {
                 <Select
                     className='mb-5'
                     value={newProduct.Sex}
+                    placeholder='Jinsi'
                     onChange={(value) =>
                         setNewProduct({
                             ...newProduct,
                             Sex: value,
                         })
                     }
-                    placeholder='Jinsi'
                     style={{ width: "100%" }}>
                     <Option value='Erkak'>Erkak</Option>
                     <Option value='Ayol'>Ayol</Option>
