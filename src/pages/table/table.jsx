@@ -361,7 +361,7 @@ export const clientstable = [
         title: "Yaratilgan vaqt",
         dataIndex: "created",
         key: "created",
-        render: (text) => formatDateTime(text),
+        // render: (text) => formatDateTime(text),
     },
 ];
 
@@ -393,12 +393,14 @@ export const newsales = [
         title: "Soni",
         dataIndex: "quantity",
     },
+    // {
+    //     title: "",
+    //     dataIndex: "client_id",
+    // },
     {
-        title: "",
-        dataIndex: "customer_name",
-    },
-    {
-        title: "Summasi",
+        title: "Jami Narx", // Qo'shilgan ustun
         dataIndex: "price",
-    }
+        key: "price",
+        render: (text) => `${text} UZS`, // Narxni formatlash
+    },
 ];
