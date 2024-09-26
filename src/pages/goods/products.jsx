@@ -18,6 +18,8 @@ const Products = () => {
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
     const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini boshq
     const [category, setCategory] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [results, setResults] = useState([]);
     const [editedData, setEditedData] = useState({
         name: "",
         price: "",
@@ -39,6 +41,14 @@ const Products = () => {
             .then((res) => setData(res.data.product))
             .catch((err) => console.log(err));
     }, []);
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            handleSearch();
+        }, 500); // 500ms kechikish
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchTerm]);
 
     const handleExport = () => {
         console.log("Export boshlanmoqda...");
@@ -71,6 +81,33 @@ const Products = () => {
             .catch(() => {
                 message.error("O'chirishda xatolik yuz berdi");
             });
+    };
+
+    const handleSearch = async () => {
+        if (!searchTerm) {
+            // Agar qidiruv terimi bo'sh bo'lsa, barcha mijozlarni ko'rsatish
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/product/all"
+                );
+                setResults(response.data.product);
+            } catch (error) {
+                console.error("Barcha mijozlarni olishda xatolik:", error);
+            }
+        } else {
+            // Qidiruv natijalarini olish
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/product/search",
+                    {
+                        params: { searchTerm },
+                    }
+                );
+                setResults(response.data.products);
+            } catch (error) {
+                console.error("Qidiruv natijalarini olishda xatolik:", error);
+            }
+        }
     };
 
     const handleEdit = (record) => {
@@ -201,14 +238,14 @@ const Products = () => {
             <div className='mt-7 flex flex-wrap items-center gap-5'>
                 <div className='w-full sm:w-auto'>
                     <Search
-                        placeholder=''
-                        onSearch={onSearch}
-                        enterButton
+                        placeholder='Nickname, F.I.SH, Passport, Tel'
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full sm:w-auto rounded-md text-xl'
                         size='large'
-                        style={{
-                            width: "300px",
-                        }}
+                        style={{ width: "300px" }}
+                        onSearch={handleSearch}
+                        onPressEnter={handleSearch}
                     />
                 </div>
                 <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
@@ -247,7 +284,7 @@ const Products = () => {
                             ),
                         },
                     ]}
-                    dataSource={data}
+                    dataSource={results.length > 0 ? results : data}
                     rowKey={(record) => record.id}
                     rowSelection={rowSelection}
                 />

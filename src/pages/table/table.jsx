@@ -393,14 +393,10 @@ export const newsales = [
         title: "Soni",
         dataIndex: "quantity",
     },
-    // {
-    //     title: "",
-    //     dataIndex: "client_id",
-    // },
     {
         title: "Jami Narx", // Qo'shilgan ustun
         dataIndex: "price",
         key: "price",
-        render: (text) => `${text} UZS`, // Narxni formatlash
+        render: (price) => `${price} UZS`, // Narxni formatlash
     },
 ];
