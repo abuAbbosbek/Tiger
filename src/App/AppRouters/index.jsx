@@ -11,9 +11,6 @@ const Dashboard = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    // let name = "sd";
-    // let email = "sd";
-    // let avatarUrl = "sd";
     return (
         <Layout>
             <Sider breakpoint='lg' collapsedWidth='0'>
