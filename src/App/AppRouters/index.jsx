@@ -1,17 +1,15 @@
 import { Layout, Menu, theme } from "antd";
-import { Link, Route, Routes, } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { MenuList } from "../../pages/ruoter/menu";
 import { menu } from "../../pages/ruoter/routes";
 // import UserProfile from "../../pages/goods/userprofile";
 import { Header } from "antd/es/layout/layout";
-
 
 const { Content, Footer, Sider } = Layout;
 const Dashboard = () => {
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
-
 
     // let name = "sd";
     // let email = "sd";
@@ -28,7 +26,7 @@ const Dashboard = () => {
                             color: "white",
                             fontSize: "24px",
                         }}>
-                        <Link to="/home">Tiger</Link>
+                        <Link to='/home'>Tiger</Link>
                     </Header>
                     <Menu
                         className='flex-grow'
@@ -57,21 +55,10 @@ const Dashboard = () => {
                             }
                         )}
                     />
-                    {/* <UserProfile
-                        avatarUrl={avatarUrl}
-                        email={email}
-                        name={name}
-                    /> */}
                 </div>
             </Sider>
 
             <Layout>
-                {/* <Header
-                    style={{
-                        padding: 0,
-                        background: colorBgContainer,
-                    }}
-                /> */}
                 <Content
                     style={{
                         margin: "12px 16px 0",

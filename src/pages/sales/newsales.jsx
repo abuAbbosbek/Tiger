@@ -2,7 +2,6 @@ import { Input, Modal, Select, Table, message, Spin } from "antd";
 import axios from "axios";
 import "boxicons";
 import { useEffect, useState } from "react";
-import { newsales } from "../table/table";
 
 const { Option } = Select;
 
@@ -16,61 +15,111 @@ const NewSales = () => {
         product_id: "",
         quantity: "",
     }); // Yangi mahsulot qo'shish uchun form ma'lumotlari
+    const [editingProduct, setEditingProduct] = useState(null); // Tahrir qilinayotgan mahsulot
 
-    useEffect(() => {
-        const savedData = localStorage.getItem("salesData");
-        if (savedData) {
-            setData(JSON.parse(savedData)); // Oldin saqlangan ma'lumotlarni yuklash
+    // Faqat musbat sonlarni qabul qiluvchi funksiya
+    const handleQuantityChange = (e) => {
+        const value = e.target.value;
+
+        // Faqat raqam va ijobiy qiymat qabul qilinishini tekshirish
+        if (/^\d*$/.test(value)) {
+            setNewProduct({
+                ...newProduct,
+                quantity: value,
+            });
+        } else {
+            message.error("Faqat musbat raqam kiriting.");
         }
-    }, []);
-
-    // localStorage-ga ma'lumot saqlash funksiyasi
-    const saveDataToLocalStorage = (newData) => {
-        localStorage.setItem("salesData", JSON.stringify(newData));
     };
-    // Yangi mahsulotni qo'shish funksiyasi
+
+    const handleEditProduct = (record) => {
+        setEditingProduct(record);
+
+        const productToEdit = product.find((p) => p.name === record.product_id);
+
+        setNewProduct({
+            product_id: productToEdit ? productToEdit.id : record.product_id,
+            quantity: record.quantity,
+        });
+        setIsAddModalVisible(true);
+    };
+
+    const saveDataToLocalStorage = (data) => {
+        localStorage.setItem("salesData", JSON.stringify(data));
+    };
+
     const handleAddNewProduct = async () => {
         const { product_id, quantity } = newProduct;
-        if (!product_id || !quantity) {
-            message.error("Iltimos, barcha maydonlarni to'ldiring.");
+
+        if (!product_id || !quantity || quantity <= 0) {
+            message.error("Iltimos, to'g'ri qiymatlar kiriting.");
             return;
         }
-        console.log(newProduct.product_id);
 
         try {
-            // Tanlangan mahsulotning narxini olish uchun API chaqirish
             const response = await axios.get(
                 `http://localhost:3001/product/${product_id}`
             );
-            const productPrice = response.data.product.price; // Mahsulot narxi
+            const productPrice = response.data.product.price;
             const productName = response.data.product.name;
-            // Umumiy narxni hisoblash
             const totalPrice = productPrice * quantity;
 
-            // Yangi mahsulot ob'ektini yaratish
-            const newItem = {
-                id: Date.now(),
-                product_id: productName,
-                quantity,
-                price: totalPrice,
-            };
+            const formattedPrice = new Intl.NumberFormat("uz-UZ").format(
+                totalPrice
+            );
 
-            // Ma'lumotni jadvalga qo'shish
-            const updatedData = [...data, newItem];
+            let updatedData = [];
+            if (editingProduct) {
+                updatedData = data.map((item) =>
+                    item.id === editingProduct.id
+                        ? {
+                              ...item,
+                              product_id: productName,
+                              quantity,
+                              price: formattedPrice,
+                          }
+                        : item
+                );
+                setEditingProduct(null); // Tahrirlashni yakunlash
+            } else {
+                const newItem = {
+                    id: Date.now(),
+                    product_id: productName,
+                    quantity,
+                    price: formattedPrice,
+                };
+                updatedData = [...data, newItem];
+            }
+
             setData(updatedData);
+            saveDataToLocalStorage(updatedData); // Ma'lumotlarni localStorage'ga saqlash
+            message.success(
+                editingProduct
+                    ? "Mahsulot muvaffaqiyatli tahrirlandi!"
+                    : "Yangi mahsulot muvaffaqiyatli qo'shildi!"
+            );
 
-            // Ma'lumotlarni localStorage-ga saqlash
-            saveDataToLocalStorage(updatedData);
-            message.success("Yangi mahsulot muvaffaqiyatli qo'shildi!");
-
-            // Formani tozalash
             setNewProduct({ product_id: "", quantity: "" });
-            setIsAddModalVisible(false); // Modalni yopish
+            setIsAddModalVisible(false);
         } catch (error) {
             message.error("Mahsulotni yuklashda xatolik yuz berdi.");
             console.error(error);
         }
     };
+    
+    const handleDeleteProduct = (recordId) => {
+        const updatedData = data.filter((item) => item.id !== recordId);
+        setData(updatedData);
+        saveDataToLocalStorage(updatedData); // Ma'lumotlarni localStorage'ga saqlash
+        message.success("Mahsulot muvaffaqiyatli o'chirildi!");
+    };
+
+    useEffect(() => {
+        const savedData = localStorage.getItem("salesData");
+        if (savedData) {
+            setData(JSON.parse(savedData)); // Saqlangan ma'lumotlarni localStorage'dan qayta yuklash
+        }
+    }, []);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -105,6 +154,43 @@ const NewSales = () => {
         fetchCustomers();
     }, []);
 
+    const newsales = [
+        {
+            title: "Turkum",
+            dataIndex: "product_id",
+        },
+        {
+            title: "Soni",
+            dataIndex: "quantity",
+        },
+        {
+            title: "Jami Narx",
+            dataIndex: "price",
+            key: "price",
+            render: (price) => `${price.toLocaleString()} UZS`, // Narxni formatlash
+        },
+        {
+            title: "Amallar",
+            key: "actions",
+            render: (record) => (
+                <div className='flex gap-2'>
+                    <button onClick={() => handleEditProduct(record)}>
+                        <box-icon
+                            name='edit-alt'
+                            type='solid'
+                            color='#0284c7'></box-icon>
+                    </button>
+                    <button onClick={() => handleDeleteProduct(record.id)}>
+                        <box-icon
+                            name='trash-alt'
+                            type='solid'
+                            color='#f87171'></box-icon>
+                    </button>
+                </div>
+            ),
+        },
+    ];
+
     return (
         <>
             {loading ? (
@@ -135,21 +221,7 @@ const NewSales = () => {
                             </button>
                         </div>
                         <Table
-                            columns={[
-                                ...newsales,
-                                {
-                                    title: "Amallar",
-                                    render: (record) => (
-                                        <button
-                                            onClick={() => console.log(record)}>
-                                            <box-icon
-                                                name='edit-alt'
-                                                type='solid'
-                                                color='#0284c7'></box-icon>
-                                        </button>
-                                    ),
-                                },
-                            ]}
+                            columns={[...newsales]}
                             dataSource={data}
                             rowKey={(record) => record.id}
                         />
@@ -203,10 +275,17 @@ const NewSales = () => {
                     </div>
 
                     <Modal
-                        title="Yangi mahsulot qo'shish"
+                        title={
+                            editingProduct
+                                ? "Mahsulotni tahrirlash"
+                                : "Yangi mahsulot qo'shish"
+                        }
                         open={isAddModalVisible}
                         onOk={handleAddNewProduct}
-                        onCancel={() => setIsAddModalVisible(false)}>
+                        onCancel={() => {
+                            setIsAddModalVisible(false);
+                            setEditingProduct(null); // Modal yopilganda tozalash
+                        }}>
                         <Select
                             id='product'
                             className='mb-5 w-full'
@@ -227,12 +306,7 @@ const NewSales = () => {
                         <Input
                             className='mb-5'
                             value={newProduct.quantity}
-                            onChange={(e) =>
-                                setNewProduct({
-                                    ...newProduct,
-                                    quantity: e.target.value,
-                                })
-                            }
+                            onChange={handleQuantityChange}
                             placeholder='Soni'
                         />
                     </Modal>

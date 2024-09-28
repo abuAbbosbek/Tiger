@@ -33,7 +33,7 @@ export const columns = [
         dataIndex: "name",
     },
     {
-        title: "Price",
+        title: "Narxi",
         dataIndex: "price",
     },
     {
@@ -394,9 +394,30 @@ export const newsales = [
         dataIndex: "quantity",
     },
     {
-        title: "Jami Narx", // Qo'shilgan ustun
+        title: "Jami Narx",
         dataIndex: "price",
         key: "price",
-        render: (price) => `${price} UZS`, // Narxni formatlash
+        render: (price) => `${price.toLocaleString()} UZS`, // Narxni formatlash
+    },
+    {
+        title: "Amallar",
+        key: "actions",
+        render: (record) => (
+            <div className='flex gap-2'>
+                <button onClick={() => handleEditProduct(record)}>
+                    <box-icon
+                        name='edit-alt'
+                        type='solid'
+                        color='#0284c7'></box-icon>
+                </button>
+                <button onClick={() => handleDeleteProduct(record.id)}>
+                    <box-icon
+                        name='trash-alt'
+                        type='solid'
+                        color='#f87171'></box-icon>
+                </button>
+            </div>
+        ),
     },
 ];
+

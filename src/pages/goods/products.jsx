@@ -7,12 +7,11 @@ import { Input, Modal, Select, Table, message } from "antd";
 import { columns } from "../table/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Search from "antd/lib/input/Search"; // Search komponentini import qilamiz
+import Search from "antd/lib/input/Search";
 import { Option } from "antd/lib/mentions";
 
 const Products = () => {
     const [data, setData] = useState([]);
-    const [excel, setExcel] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
     const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
@@ -209,6 +208,62 @@ const Products = () => {
         console.log("Search value: ", value);
     };
 
+    const handleQuantityEditDataChange = (e) => {
+        const value = e.target.value;
+
+        // Faqat raqam va ijobiy qiymat qabul qilinishini tekshirish
+        if (/^\d*$/.test(value)) {
+            setEditedData({
+                ...editedData,
+                quantity: value,
+            });
+        } else {
+            message.error("Faqat musbat raqam kiriting.");
+        }
+    };
+
+    const handlePriceEditDataChange = (e) => {
+        const value = e.target.value;
+
+        // Faqat raqam va ijobiy qiymat qabul qilinishini tekshirish
+        if (/^\d*$/.test(value)) {
+            setEditedData({
+                ...editedData,
+                price: value,
+            });
+        } else {
+            message.error("Faqat musbat raqam kiriting.");
+        }
+    };
+
+    const handleQuantityNewProductChange = (e) => {
+        const value = e.target.value;
+
+        // Faqat raqam va ijobiy qiymat qabul qilinishini tekshirish
+        if (/^\d*$/.test(value)) {
+            setNewProduct({
+                ...newProduct,
+                quantity: value,
+            });
+        } else {
+            message.error("Faqat musbat raqam kiriting.");
+        }
+    };
+
+    const handlePriceNewProductChange = (e) => {
+        const value = e.target.value;
+
+        // Faqat raqam va ijobiy qiymat qabul qilinishini tekshirish
+        if (/^\d*$/.test(value)) {
+            setNewProduct({
+                ...newProduct,
+                price: value,
+            });
+        } else {
+            message.error("Faqat musbat raqam kiriting.");
+        }
+    };
+
     return (
         <>
             <div className='flex justify-between'>
@@ -307,12 +362,7 @@ const Products = () => {
                 <Input
                     className='mb-5'
                     value={editedData.quantity}
-                    onChange={(e) => {
-                        setEditedData({
-                            ...editedData,
-                            quantity: e.target.value,
-                        });
-                    }}
+                    onChange={handleQuantityEditDataChange}
                     placeholder='Soni'
                 />
                 <Input
@@ -329,12 +379,7 @@ const Products = () => {
                 <Input
                     className='mb-5'
                     value={editedData.price}
-                    onChange={(e) =>
-                        setEditedData({
-                            ...editedData,
-                            price: e.target.value,
-                        })
-                    }
+                    onChange={handlePriceEditDataChange}
                     placeholder='Narxi'
                 />
             </Modal>
@@ -364,12 +409,7 @@ const Products = () => {
                     <Input
                         className='mb-5'
                         value={newProduct.quantity}
-                        onChange={(e) =>
-                            setNewProduct({
-                                ...newProduct,
-                                quantity: e.target.value,
-                            })
-                        }
+                        onChange={handleQuantityNewProductChange}
                         placeholder='Soni'
                     />
                     <Input
@@ -386,12 +426,7 @@ const Products = () => {
                     <Input
                         className='mb-5'
                         value={newProduct.price}
-                        onChange={(e) =>
-                            setNewProduct({
-                                ...newProduct,
-                                price: e.target.value,
-                            })
-                        }
+                        onChange={handleQuantityNewProductChange}
                         placeholder='Narxi'
                     />
                     <Select

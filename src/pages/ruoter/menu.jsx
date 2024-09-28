@@ -31,7 +31,7 @@ const MenuList = [
                 element: <Products />,
             },
             {
-                id: 7,
+                id: 42,
                 title: "Katalog",
                 path: "/katalog",
                 element: <Katalog />,

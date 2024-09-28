@@ -8,13 +8,15 @@ import { Input, message, Modal, Table } from "antd";
 import { katalog } from "../table/table";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Search from "antd/lib/input/Search"; // Search komponentini import qilamiz
+import Search from "antd/lib/input/Search";
 const Katalog = () => {
     const [data, setData] = useState([]);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Checkbox tanlangan satrlar uchun
-    const [editingEmployee, setEditingEmployee] = useState(null); // Tahrirlanayotgan xodim
-    const [isModalVisible, setIsModalVisible] = useState(false); // Modal ko'rinishini boshqarish
-    const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Yaratish modalini boshqarish
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]); 
+    const [editingEmployee, setEditingEmployee] = useState(null); 
+    const [isModalVisible, setIsModalVisible] = useState(false); 
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [results, setResults] = useState([]);
     const [editedData, setEditedData] = useState({
         name: "",
     });
@@ -121,6 +123,41 @@ const Katalog = () => {
             });
     };
 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            handleSearch();
+        }, 500); // 500ms kechikish
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchTerm]);
+
+    const handleSearch = async () => {
+        if (!searchTerm) {
+            // Agar qidiruv terimi bo'sh bo'lsa, barcha mijozlarni ko'rsatish
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/category/all"
+                );
+                setResults(response.data.AllCategory);
+            } catch (error) {
+                console.error("Barcha mijozlarni olishda xatolik:", error);
+            }
+        } else {
+            // Qidiruv natijalarini olish
+            try {
+                const response = await axios.get(
+                    "http://localhost:3001/category/search",
+                    {
+                        params: { searchTerm },
+                    }
+                );
+                setResults(response.data.category);
+            } catch (error) {
+                console.error("Qidiruv natijalarini olishda xatolik:", error);
+            }
+        }
+    };
+
     const rowSelection = {
         selectedRowKeys,
         onChange: (selectedRowKeys) => {
@@ -156,14 +193,14 @@ const Katalog = () => {
             <div className='mt-7 flex flex-wrap items-center gap-5'>
                 <div className='w-full sm:w-auto'>
                     <Search
-                        placeholder='input search text'
-                        // onSearch={}
-                        enterButton
+                        placeholder='Tovar nomi '
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className='w-full sm:w-auto rounded-md text-xl'
                         size='large'
-                        style={{
-                            width: "300px",
-                        }}
+                        style={{ width: "300px" }}
+                        onSearch={handleSearch}
+                        onPressEnter={handleSearch}
                     />
                 </div>
                 <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
@@ -199,7 +236,7 @@ const Katalog = () => {
                             ),
                         },
                     ]}
-                    dataSource={data}
+                    dataSource={results.length > 0 ? results : data}
                     rowKey={(record) => record.id}
                     rowSelection={rowSelection}
                 />
