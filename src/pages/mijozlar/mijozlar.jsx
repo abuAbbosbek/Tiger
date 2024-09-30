@@ -296,13 +296,13 @@ const Customers = () => {
                     <Button
                         onClick={handleDateFilter}
                         size='large'
-                        className='ml-2 bg-sky-500 text-black'>
+                        className='ml-2 bg-sky-500 text-white '>
                         Filterlash
                     </Button>
                 </div>
 
                 <Button
-                    className='bg-sky-500 text-black'
+                    className='bg-sky-500 text-white'
                     size='large'
                     onClick={handleAddProduct}>
                     <PlusOutlined className='mr-2' />

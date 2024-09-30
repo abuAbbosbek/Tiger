@@ -1,4 +1,5 @@
-import { Input, Modal, Select, Table, message, Spin } from "antd";
+import { Input, Modal, Select, Table, message, Spin, Button } from "antd";
+import Search from "antd/lib/input/Search";
 import axios from "axios";
 import "boxicons";
 import { useEffect, useState } from "react";
@@ -68,27 +69,35 @@ const NewSales = () => {
                 totalPrice
             );
 
-            let updatedData = [];
-            if (editingProduct) {
-                updatedData = data.map((item) =>
-                    item.id === editingProduct.id
-                        ? {
-                              ...item,
-                              product_id: productName,
-                              quantity,
-                              price: formattedPrice,
-                          }
-                        : item
+            let updatedData = [...data];
+            const existingProductIndex = updatedData.findIndex(
+                (item) => item.product_id === productName
+            );
+
+            if (existingProductIndex !== -1) {
+                // Agar mahsulot allaqachon mavjud bo'lsa, sonini yangilash
+                const existingProduct = updatedData[existingProductIndex];
+                const newQuantity =
+                    parseInt(existingProduct.quantity) + parseInt(quantity);
+                const newTotalPrice = productPrice * newQuantity;
+                const formattedNewPrice = new Intl.NumberFormat("uz-UZ").format(
+                    newTotalPrice
                 );
-                setEditingProduct(null); // Tahrirlashni yakunlash
+
+                updatedData[existingProductIndex] = {
+                    ...existingProduct,
+                    quantity: newQuantity,
+                    price: formattedNewPrice,
+                };
             } else {
+                // Yangi mahsulot qo'shish
                 const newItem = {
                     id: Date.now(),
                     product_id: productName,
                     quantity,
                     price: formattedPrice,
                 };
-                updatedData = [...data, newItem];
+                updatedData = [...updatedData, newItem];
             }
 
             setData(updatedData);
@@ -106,7 +115,7 @@ const NewSales = () => {
             console.error(error);
         }
     };
-    
+
     const handleDeleteProduct = (recordId) => {
         const updatedData = data.filter((item) => item.id !== recordId);
         setData(updatedData);
@@ -199,38 +208,56 @@ const NewSales = () => {
                 <div className='flex'>
                     <div className='w-7/10 p-2 m-2'>
                         <h1 className='text-5xl mb-2'>Savatcha</h1>
-                        <div className='flex gap-5'>
-                            <input
-                                className='text-xl px-3 py-3 w-[860px] rounded-md bg-slate-100'
-                                type='search'
-                                placeholder='Artikl, Shtrix-kod, Nomi'
-                            />
-                        </div>
-                        <div className='flex justify-between'></div>
-                        <div className='flex mt-5 mb-5'>
-                            <button className='text-xl bg-sky-500 p-2 rounded-xl'>
+                        <div className='flex mt-5 mb-5 gap-5'>
+                            <div>
+                                <Search
+                                    size='large'
+                                    type='search'
+                                    placeholder=''
+                                    className='w-[400px]'
+                                />
+                            </div>
+                            <Button
+                                className='text-white bg-sky-500'
+                                size='large'>
                                 Barcha sotuvchilar
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => setIsAddModalVisible(true)}
-                                className='text-xl bg-gray-100 px-4 py-2.5 rounded-xl ml-5'>
+                                size='large'>
                                 <box-icon
                                     name='plus-circle'
                                     type='solid'
                                     color='#439bef'></box-icon>
-                            </button>
+                            </Button>
                         </div>
-                        <Table
-                            columns={[...newsales]}
-                            dataSource={data}
-                            rowKey={(record) => record.id}
-                        />
+                        <div className='rounded-xl border-2'>
+                            <Table
+                                columns={[...newsales]}
+                                dataSource={data}
+                                rowKey={(record) => record.id}
+                                pagination={{
+                                    pageSize: 5,
+                                    showTotal: () => (
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}>
+                                            <Button className='bg-sky-500 text-white'>
+                                                Yaratish
+                                            </Button>
+                                        </div>
+                                    ),
+                                }}
+                            />
+                        </div>
                     </div>
 
                     <hr className='w-[1px] h-[1000px] bg-gray-400 inline-block mx-5' />
 
                     <div className='w-3/10 p-4 m-2'>
-                        <h1 className='text-2xl'>Mijoz</h1>
+                        <h1 className='text-2xl mb-2'>Mijoz</h1>
                         <Select
                             id='customer'
                             className='mb-5 w-full'

@@ -4,16 +4,16 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Input, message, Modal, Table } from "antd";
+import { Button, Input, message, Modal, Table } from "antd";
 import { katalog } from "../table/table";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Search from "antd/lib/input/Search";
 const Katalog = () => {
     const [data, setData] = useState([]);
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]); 
-    const [editingEmployee, setEditingEmployee] = useState(null); 
-    const [isModalVisible, setIsModalVisible] = useState(false); 
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [editingEmployee, setEditingEmployee] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAddModalVisible, setIsAddModalVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [results, setResults] = useState([]);
@@ -46,6 +46,7 @@ const Katalog = () => {
             )
         )
             .then(() => {
+                window.location.reload();
                 message.success(
                     "Tanlangan elementlar muvaffaqiyatli o'chirildi"
                 );
@@ -74,6 +75,7 @@ const Katalog = () => {
                 editedData
             )
             .then(() => {
+                window.location.reload();
                 message.success("Ma'lumotlar muvaffaqiyatli yangilandi");
                 setData((prevData) =>
                     prevData.map((item) =>
@@ -98,6 +100,7 @@ const Katalog = () => {
         axios
             .post("http://localhost:3001/category/create", newProduct)
             .then(() => {
+                window.location.reload();
                 message.success("Yangi mahsulot muvaffaqiyatli qo'shildi");
 
                 // Yangi mahsulot qo'shilgandan keyin barcha mahsulotlarni qayta yuklash
@@ -203,20 +206,21 @@ const Katalog = () => {
                         onPressEnter={handleSearch}
                     />
                 </div>
-                <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button
-                        className='w-full h-full'
+                <div className=' text-white '>
+                    <Button
+                        size='large'
+                        className='bg-sky-500 text-white'
                         onClick={handleAddProduct}>
                         <PlusOutlined className='mr-2' />
                         Yaratish
-                    </button>
+                    </Button>
                 </div>
-                <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button className='w-full h-full'>Eksport</button>
-                </div>
-                <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button className='w-full h-full'>Import</button>
-                </div>
+                <Button className='bg-sky-500 text-white' size='large'>
+                    Eksport
+                </Button>
+                <Button className=' bg-sky-500 text-white' size='large'>
+                    Import
+                </Button>
             </div>
 
             <div>

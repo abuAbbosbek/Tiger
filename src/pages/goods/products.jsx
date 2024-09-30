@@ -3,7 +3,7 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Input, Modal, Select, Table, message } from "antd";
+import { Button, Input, Modal, Select, Table, message } from "antd";
 import { columns } from "../table/table";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -69,6 +69,7 @@ const Products = () => {
             )
         )
             .then(() => {
+                window.location.reload();
                 message.success(
                     "Tanlangan elementlar muvaffaqiyatli o'chirildi"
                 );
@@ -136,6 +137,7 @@ const Products = () => {
                             : item
                     )
                 );
+                window.location.reload();
                 setIsModalVisible(false);
             })
             .catch((err) => {
@@ -152,6 +154,7 @@ const Products = () => {
         axios
             .post("http://localhost:3001/product/create", newProduct)
             .then(() => {
+                window.location.reload();
                 message.success("Yangi mahsulot muvaffaqiyatli qo'shildi");
 
                 // Yangi mahsulot qo'shilgandan keyin barcha mahsulotlarni qayta yuklash
@@ -303,22 +306,28 @@ const Products = () => {
                         onPressEnter={handleSearch}
                     />
                 </div>
-                <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button
-                        className='w-full h-full'
+                <div className='sm:w-auto'>
+                    <Button
+                        size='large'
+                        className='bg-sky-500 text-white'
                         onClick={handleAddProduct}>
                         <PlusOutlined className='mr-2' />
                         Yaratish
-                    </button>
+                    </Button>
                 </div>
-                <div className='bg-sky-500 text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button className='w-full h-full' onClick={handleExport}>
+                <div className='sm:w-auto'>
+                    <Button
+                        className='bg-sky-500 text-white'
+                        onClick={handleExport}
+                        size='large'>
                         Export
-                    </button>
+                    </Button>
                 </div>
 
-                <div className='bg-sky-500  text-xl py-2 px-2 rounded-md w-full sm:w-auto'>
-                    <button className='w-full h-full'>Import</button>
+                <div className='sm:w-auto'>
+                    <Button className='bg-sky-500 text-white' size='large'>
+                        Import
+                    </Button>
                 </div>
             </div>
 
@@ -426,7 +435,7 @@ const Products = () => {
                     <Input
                         className='mb-5'
                         value={newProduct.price}
-                        onChange={handleQuantityNewProductChange}
+                        onChange={handlePriceNewProductChange}
                         placeholder='Narxi'
                     />
                     <Select

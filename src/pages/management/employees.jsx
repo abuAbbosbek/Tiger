@@ -4,11 +4,12 @@ import {
     PlusOutlined,
     UnorderedListOutlined,
 } from "@ant-design/icons";
-import { message, Table, Modal, Input } from "antd";
+import { message, Table, Modal, Input, Button } from "antd";
 import { employees } from "../table/table";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Search from "antd/lib/input/Search";
 
 const Employees = () => {
     const navigate = useNavigate();
@@ -134,26 +135,21 @@ const Employees = () => {
 
             <div className='mt-7 flex'>
                 <div>
-                    <input
-                        className='text-xl px-3 py-3 w-[700px] rounded-md bg-slate-100'
+                    <Search
+                        size="large"
                         type='search'
                         placeholder='ID, ismi, telefon'
                     />
-                    <select className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
-                        <option>Filtrlar</option>
-                    </select>
                 </div>
-                <div className='px-3 w-36 bg-slate-100 text-xl py-3 rounded-md ml-5'>
-                    <button>
-                        <CodeSandboxOutlined className='mr-2' />
-                        Harakatlar
-                    </button>
-                </div>
-                <div className='px-3 bg-sky-500 text-xl py-3 rounded-md ml-5'>
-                    <button onClick={handleButtonClick}>
+
+                <div className=' ml-5'>
+                    <Button
+                        className='bg-sky-500 text-white'
+                        size='large'
+                        onClick={handleButtonClick}>
                         <PlusOutlined className='mr-2' />
                         Yangi xodim
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -261,7 +257,6 @@ const Employees = () => {
                     }}
                     placeholder='Passport seriyasi'
                 />
-                
             </Modal>
         </>
     );
