@@ -15,6 +15,7 @@ const NewSales = () => {
     const [newProduct, setNewProduct] = useState({
         product_id: "",
         quantity: "",
+        client_id: "",
     }); // Yangi mahsulot qo'shish uchun form ma'lumotlari
     const [editingProduct, setEditingProduct] = useState(null); // Tahrir qilinayotgan mahsulot
 
@@ -52,7 +53,10 @@ const NewSales = () => {
     const handleAddNewProduct = async () => {
         const { product_id, quantity } = newProduct;
 
-        if (!product_id || !quantity || quantity <= 0) {
+        // Quantity ni number formatida saqlash
+        const quantityNumber = parseInt(quantity, 10);
+
+        if (!product_id || !quantityNumber || quantityNumber <= 0) {
             message.error("Iltimos, to'g'ri qiymatlar kiriting.");
             return;
         }
@@ -62,8 +66,7 @@ const NewSales = () => {
                 `http://localhost:3001/product/${product_id}`
             );
             const productPrice = response.data.product.price;
-            const productName = response.data.product.name;
-            const totalPrice = productPrice * quantity;
+            const totalPrice = productPrice * quantityNumber;
 
             const formattedPrice = new Intl.NumberFormat("uz-UZ").format(
                 totalPrice
@@ -71,14 +74,13 @@ const NewSales = () => {
 
             let updatedData = [...data];
             const existingProductIndex = updatedData.findIndex(
-                (item) => item.product_id === productName
+                (item) => item.product_id === product_id // faqat ID dan foydalanamiz
             );
 
             if (existingProductIndex !== -1) {
-                // Agar mahsulot allaqachon mavjud bo'lsa, sonini yangilash
                 const existingProduct = updatedData[existingProductIndex];
                 const newQuantity =
-                    parseInt(existingProduct.quantity) + parseInt(quantity);
+                    parseInt(existingProduct.quantity) + quantityNumber;
                 const newTotalPrice = productPrice * newQuantity;
                 const formattedNewPrice = new Intl.NumberFormat("uz-UZ").format(
                     newTotalPrice
@@ -90,18 +92,17 @@ const NewSales = () => {
                     price: formattedNewPrice,
                 };
             } else {
-                // Yangi mahsulot qo'shish
                 const newItem = {
                     id: Date.now(),
-                    product_id: productName,
-                    quantity,
+                    product_id: product_id, // faqat ID saqlanadi
+                    quantity: quantityNumber,
                     price: formattedPrice,
                 };
                 updatedData = [...updatedData, newItem];
             }
 
             setData(updatedData);
-            saveDataToLocalStorage(updatedData); // Ma'lumotlarni localStorage'ga saqlash
+            saveDataToLocalStorage(updatedData);
             message.success(
                 editingProduct
                     ? "Mahsulot muvaffaqiyatli tahrirlandi!"
@@ -181,10 +182,44 @@ const NewSales = () => {
         }, 0);
     };
 
+    const handleCreateOrder = async () => {
+        if (!newProduct.client_id) {
+            message.error("Iltimos, mijozni tanlang.");
+            return;
+        }
+
+        // Buyurtma ma'lumotlari
+        const orderData = {
+            client_id: newProduct.client_id, // Mijozning ID'si
+            products: data.map((item) => ({
+                product_id: item.product_id, // Bu yerda product_id ni to'g'ri yuboramiz
+                quantity: item.quantity,
+            })),
+        };
+        console.log(orderData);
+
+        try {
+            const response = await axios.post(
+                "http://localhost:3001/OrderClient/order",
+                orderData
+            );
+            message.success("Buyurtma muvaffaqiyatli yaratildi!");
+            setData([]); // Jadvallarni tozalash
+            localStorage.removeItem("salesData"); // LocalStorage'dan ma'lumotlarni o'chirish
+        } catch (error) {
+            message.error("Buyurtma yaratishda xatolik yuz berdi.");
+            console.error(error);
+        }
+    };
+
     const newsales = [
         {
             title: "Turkum",
             dataIndex: "product_id",
+            render: (text) => {
+                const productItem = product.find((p) => p.id === text);
+                return productItem ? productItem.name : text; // ID ga qarab nomni ko'rsatish
+            },
         },
         {
             title: "Soni",
@@ -263,7 +298,7 @@ const NewSales = () => {
                                                 justifyContent: "space-between",
                                                 alignItems: "center",
                                             }}>
-                                            <b className="mr-2">Jami soni:</b>
+                                            <b className='mr-2'>Jami soni:</b>
                                             <span>
                                                 {calculateTotalQuantity()} ta
                                             </span>
@@ -278,6 +313,11 @@ const NewSales = () => {
                                                 )}{" "}
                                                 UZS
                                             </span>
+                                            <Button
+                                                className='bg-sky-500 text-white ml-2'
+                                                onClick={handleCreateOrder}>
+                                                Yaratish
+                                            </Button>
                                         </div>
                                     ),
                                 }}
@@ -293,13 +333,14 @@ const NewSales = () => {
                             id='customer'
                             className='mb-5 w-full'
                             placeholder='Mijozni tanlang'
-                            value={newProduct.customer_name}
-                            onChange={(value) =>
+                            value={newProduct.client_id} // Tanlangan mijozning ID'sini ko'rsatish
+                            onChange={(value) => {
+                                console.log("Tanlangan mijoz ID:", value); // Konsolga chiqarib tekshirish
                                 setNewProduct({
                                     ...newProduct,
-                                    customer_name: value,
-                                })
-                            }
+                                    client_id: value, // Tanlangan mijozning ID'sini saqlash
+                                });
+                            }}
                             showSearch
                             optionFilterProp='children'
                             filterOption={(input, option) =>

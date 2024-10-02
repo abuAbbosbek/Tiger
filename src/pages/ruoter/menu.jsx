@@ -17,6 +17,7 @@ import Repricing from "../goods/repricing";
 import Employees from "../management/employees";
 import Products from "../goods/products";
 import Katalog from "../goods/katalog";
+import AllSales from "../sales/allsales";
 
 const MenuList = [
     {
@@ -90,7 +91,8 @@ const MenuList = [
             {
                 id: 17,
                 title: "Barcha sotuvlar",
-                path: "/barchasotuvlar",
+                path: "/allsales",
+                element: <AllSales/>,
             },
         ],
     },

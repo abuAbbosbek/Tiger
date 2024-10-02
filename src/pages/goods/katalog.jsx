@@ -154,7 +154,7 @@ const Katalog = () => {
                         params: { searchTerm },
                     }
                 );
-                setResults(response.data.category);
+                setResults(response.data.searchResults);
             } catch (error) {
                 console.error("Qidiruv natijalarini olishda xatolik:", error);
             }

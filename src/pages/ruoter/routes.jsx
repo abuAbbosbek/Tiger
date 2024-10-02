@@ -10,6 +10,7 @@ import Customers from "../mijozlar/mijozlar";
 import CustomerGroup from "../mijozlar/mijozlarguruhi";
 import CustomerDebts from "../mijozlar/mijozlarqarzlari";
 import YangiMijoz from "../mijozlar/yangimijozbutton";
+import AllSales from "../sales/allsales";
 import NewSales from "../sales/newsales";
 
 export const menu = [
@@ -77,5 +78,10 @@ export const menu = [
         id: 13,
         path: "/home",
         element: <HomePage />,
+    },
+    {
+        id: 14,
+        path: "/allsales",
+        element: <AllSales />,
     }
 ];
