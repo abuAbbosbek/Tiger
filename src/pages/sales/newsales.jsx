@@ -163,6 +163,24 @@ const NewSales = () => {
         fetchCustomers();
     }, []);
 
+    const calculateTotalQuantity = () => {
+        return data.reduce((total, item) => total + parseInt(item.quantity), 0);
+    };
+
+    const calculateTotalPrice = () => {
+        return data.reduce((total, item) => {
+            // 'UZS'ni olib tashlash, vergulni olib tashlash, va raqamga aylantirish
+            const itemPrice = parseInt(
+                item.price
+                    .replace(/\s+/g, "")
+                    .replace(/,/g, "")
+                    .replace("UZS", ""),
+                10
+            );
+            return total + itemPrice;
+        }, 0);
+    };
+
     const newsales = [
         {
             title: "Turkum",
@@ -233,7 +251,7 @@ const NewSales = () => {
                         </div>
                         <div className='rounded-xl border-2'>
                             <Table
-                                columns={[...newsales]}
+                                columns={newsales}
                                 dataSource={data}
                                 rowKey={(record) => record.id}
                                 pagination={{
@@ -242,11 +260,24 @@ const NewSales = () => {
                                         <div
                                             style={{
                                                 display: "flex",
+                                                justifyContent: "space-between",
                                                 alignItems: "center",
                                             }}>
-                                            <Button className='bg-sky-500 text-white'>
-                                                Yaratish
-                                            </Button>
+                                            <b className="mr-2">Jami soni:</b>
+                                            <span>
+                                                {calculateTotalQuantity()} ta
+                                            </span>
+                                            <b className='ml-5 mr-2'>
+                                                Jami narxi:
+                                            </b>
+                                            <span>
+                                                {new Intl.NumberFormat(
+                                                    "uz-UZ"
+                                                ).format(
+                                                    calculateTotalPrice()
+                                                )}{" "}
+                                                UZS
+                                            </span>
                                         </div>
                                     ),
                                 }}
