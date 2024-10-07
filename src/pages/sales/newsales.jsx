@@ -16,8 +16,8 @@ const NewSales = () => {
         product_id: "",
         quantity: "",
         client_id: "",
-    }); // Yangi mahsulot qo'shish uchun form ma'lumotlari
-    const [editingProduct, setEditingProduct] = useState(null); // Tahrir qilinayotgan mahsulot
+    });
+    const [editingProduct, setEditingProduct] = useState(null);
 
     // Faqat musbat sonlarni qabul qiluvchi funksiya
     const handleQuantityChange = (e) => {
@@ -34,87 +34,57 @@ const NewSales = () => {
         }
     };
 
-    const handleEditProduct = (record) => {
-        setEditingProduct(record);
-    
-        const productToEdit = product.find((p) => p.id === record.product_id);
-    
-        if (!productToEdit) {
-            console.error('Mahsulot topilmadi');
-            return;
-        }
-    
-        setNewProduct({
-            product_id: productToEdit.id,
-            quantity: record.quantity, // Mahsulot miqdorini tahrir qilishdan oldin 1 ga kamaytiramiz
-        });
-    
-        setIsAddModalVisible(true);
-    };
-    
-    
-
     const saveDataToLocalStorage = (data) => {
         localStorage.setItem("salesData", JSON.stringify(data));
     };
 
     const handleAddNewProduct = async () => {
         const { product_id, quantity } = newProduct;
-    
-        // Quantity ni number formatida saqlash
         const quantityNumber = parseInt(quantity, 10);
-    
-        if (!product_id || !quantityNumber || quantityNumber <= 0) {
+
+        if (!product_id || !quantityNumber || quantityNumber < 0) {
             message.error("Iltimos, to'g'ri qiymatlar kiriting.");
             return;
         }
-    
+
         try {
             const response = await axios.get(
                 `http://localhost:3001/product/${product_id}`
             );
-    
-            // Agar backenddan 400 status kodi kelsa
-            if (response.status === 400) {
-                message.error("Mahsulotlar yetarli emas");
-                return;
-            }
-    
             const productPrice = response.data.product.price;
             const totalPrice = productPrice * quantityNumber;
-    
             const formattedPrice = new Intl.NumberFormat("uz-UZ").format(
                 totalPrice
             );
-    
+
             let updatedData = [...data];
             const existingProductIndex = updatedData.findIndex(
                 (item) => item.product_id === product_id
             );
-    
+
             if (existingProductIndex !== -1) {
-                const existingProduct = updatedData[existingProductIndex];
-                const newQuantity = quantityNumber;
-                const newTotalPrice = productPrice * newQuantity;
-                const formattedNewPrice = new Intl.NumberFormat("uz-UZ").format(
-                    newTotalPrice
-                );
-    
-                updatedData[existingProductIndex] = {
-                    ...existingProduct,
-                    quantity: newQuantity,
-                    price: formattedNewPrice,
-                };
+                // Agar mahsulot mavjud bo'lsa
+                if (editingProduct) {
+                    // Tahrir qilish holati
+                    updatedData[existingProductIndex].quantity = quantityNumber; // Yangilangan son
+                    updatedData[existingProductIndex].price = formattedPrice; // Narxni yangilash
+                } else {
+                    // Yangi mahsulot qo'shish holati
+                    updatedData[existingProductIndex].quantity +=
+                        quantityNumber; // Yangilash
+                    updatedData[existingProductIndex].price = formattedPrice; // Narxni yangilash
+                }
             } else {
+                // Mahsulot mavjud bo'lmasa, yangi yozuv yaratish
                 const newItem = {
                     id: Date.now(),
                     product_id: product_id,
                     quantity: quantityNumber,
                     price: formattedPrice,
                 };
-                updatedData = [...updatedData, newItem];
+                updatedData.push(newItem);
             }
-    
+
             setData(updatedData);
             saveDataToLocalStorage(updatedData);
             message.success(
@@ -122,12 +92,12 @@ const NewSales = () => {
                     ? "Mahsulot muvaffaqiyatli tahrirlandi!"
                     : "Yangi mahsulot muvaffaqiyatli qo'shildi!"
             );
-    
+
             setNewProduct({ product_id: "", quantity: "" });
             setIsAddModalVisible(false);
+            setEditingProduct(null); // Tahrir holatini tozalash
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                // Agar 400 status kodi bo'lsa
                 message.error("Mahsulotlar yetarli emas");
             } else {
                 message.error("Mahsulotni yuklashda xatolik yuz berdi.");
@@ -135,7 +105,6 @@ const NewSales = () => {
             console.error(error);
         }
     };
-    
 
     const handleDeleteProduct = (recordId) => {
         const updatedData = data.filter((item) => item.id !== recordId);
@@ -235,6 +204,24 @@ const NewSales = () => {
             }
             console.error(error);
         }
+    };
+
+    const handleEditProduct = (record) => {
+        setEditingProduct(record);
+
+        const productToEdit = product.find((p) => p.id === record.product_id);
+
+        if (!productToEdit) {
+            console.error("Mahsulot topilmadi");
+            return;
+        }
+
+        setNewProduct({
+            product_id: productToEdit.id,
+            quantity: record.quantity,
+        });
+
+        setIsAddModalVisible(true);
     };
 
     const newsales = [

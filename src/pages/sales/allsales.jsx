@@ -22,7 +22,11 @@ const AllSales = () => {
             Export
           </Button>
         </div>
-      </div>
+          </div>
+          
+          <div>
+              shu yerga
+          </div>
     </>
   );
 };
