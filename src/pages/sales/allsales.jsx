@@ -1,47 +1,30 @@
-import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import Search from "antd/lib/input/Search";
 
 const AllSales = () => {
-    return (
-        <>
-            <div className='flex'>
-                <h1 className='text-4xl mb-2'>Barcha sotuvlar</h1>
-            </div>
-            <div className='mt-2 flex flex-wrap items-center gap-5'>
-                <div className='w-full sm:w-auto'>
-                    <Search
-                        placeholder='Nickname, F.I.SH, Passport, Tel'
-                        // value={searchTerm}
-                        // onChange={(e) => setSearchTerm(e.target.value)}
-                        // className='w-full sm:w-auto rounded-md text-xl'
-                        size='large'
-                        style={{ width: "300px" }}
-                        // onSearch={handleSearch}
-                        // onPressEnter={handleSearch}
-                    />
-                </div>
-                <div className='sm:w-auto'>
-                    <Button
-                        size='large'
-                        className='bg-sky-500 text-white'
-                        // onClick={handleAddProduct}
-                    >
-                        <PlusOutlined className='mr-2' />
-                        Yaratish
-                    </Button>
-                </div>
-                <div className='sm:w-auto'>
-                    <Button
-                        className='bg-sky-500 text-white'
-                        // onClick={handleExport}
-                        size='large'>
-                        Export
-                    </Button>
-                </div>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <div className="flex">
+        <h1 className="text-4xl mb-2">Barcha sotuvlar</h1>
+      </div>
+
+      <div className="mt-2 flex flex-wrap items-center gap-5">
+        <div className="w-full sm:w-auto">
+          <Search
+            placeholder="Nickname, F.I.SH, Passport, Tel"
+            size="large"
+            style={{ width: "300px" }}
+          />
+        </div>
+
+        <div className="sm:w-auto">
+          <Button className="bg-sky-500 text-white" size="large">
+            Export
+          </Button>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default AllSales;

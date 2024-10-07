@@ -85,7 +85,7 @@ const Products = () => {
 
     const handleSearch = async () => {
         if (!searchTerm) {
-            // Agar qidiruv terimi bo'sh bo'lsa, barcha mijozlarni ko'rsatish
+            // Aga r qidiruv terimi bo'sh bo'lsa, barcha mijozlarni ko'rsatish
             try {
                 const response = await axios.get(
                     "http://localhost:3001/product/all"
