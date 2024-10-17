@@ -428,3 +428,170 @@ const NewSales = () => {
 };
 
 export default NewSales;
+
+
+// import { Input, Modal, Select, Table, message, Spin, Button } from "antd";
+// import Search from "antd/lib/input/Search";
+// import axios from "axios";
+// import "boxicons";
+// import { useEffect, useState } from "react";
+// import BarcodeReader from "react-barcode-reader"; // Barcode Reader importi
+
+// const { Option } = Select;
+
+// const NewSales = () => {
+//     const [data, setData] = useState([]); // Jadvallingiz uchun ma'lumotlar
+//     const [isAddModalVisible, setIsAddModalVisible] = useState(false); // Modalni ko'rsatish uchun
+//     const [product, setProduct] = useState([]); // Mahsulotlar ro'yxati
+//     const [customer, setCustomer] = useState([]); // Mijozlar ro'yxati
+//     const [loading, setLoading] = useState(false); // Yuklash holati
+//     const [newProduct, setNewProduct] = useState({
+//         product_id: "",
+//         quantity: "",
+//         client_id: "",
+//     });
+//     const [editingProduct, setEditingProduct] = useState(null);
+//     const [isScanning, setIsScanning] = useState(false); // Barcode o'qishni nazorat qilish
+
+//     // Faqat musbat sonlarni qabul qiluvchi funksiya
+//     const handleQuantityChange = (e) => {
+//         const value = e.target.value;
+
+//         // Faqat raqam va ijobiy qiymat qabul qilinishini tekshirish
+//         if (/^\d*$/.test(value)) {
+//             setNewProduct({
+//                 ...newProduct,
+//                 quantity: value,
+//             });
+//         } else {
+//             message.error("Faqat musbat raqam kiriting.");
+//         }
+//     };
+
+//     const handleScan = (data) => {
+//         if (data) {
+//             setNewProduct({
+//                 ...newProduct,
+//                 product_id: data, // O'qilgan barcode ni product_id ga saqlash
+//             });
+//             setIsScanning(false); // O'qishni to'xtatish
+//         }
+//     };
+
+//     const handleError = (err) => {
+//         console.error(err); // O'qishdagi xatolik
+//     };
+
+//     const saveDataToLocalStorage = (data) => {
+//         localStorage.setItem("salesData", JSON.stringify(data));
+//     };
+
+//     // ... (qolgan kod)
+
+//     return (
+//         <>
+//             {loading ? (
+//                 <Spin size='large' />
+//             ) : (
+//                 <div className='flex'>
+//                     {/* ... (qolgan kod) */}
+
+//                     <div className='w-3/10 p-4 m-2'>
+//                         <h1 className='text-2xl mb-2'>Mijoz</h1>
+//                         <Select
+//                             id='customer'
+//                             className='mb-5 w-full'
+//                             placeholder='Mijozni tanlang'
+//                             value={newProduct.client_id} // Tanlangan mijozning ID'sini ko'rsatish
+//                             onChange={(value) => {
+//                                 setNewProduct({
+//                                     ...newProduct,
+//                                     client_id: value, // Tanlangan mijozning ID'sini saqlash
+//                                 });
+//                             }}
+//                             showSearch
+//                             optionFilterProp='children'
+//                             filterOption={(input, option) =>
+//                                 option.children
+//                                     .toLowerCase()
+//                                     .includes(input.toLowerCase())
+//                             }>
+//                             {customer.map((customer) => (
+//                                 <Option key={customer.id} value={customer.id}>
+//                                     {customer.Full_name}
+//                                 </Option>
+//                             ))}
+//                         </Select>
+
+//                         {/* Barcode Reader ni joylashtirish */}
+//                         {isScanning ? (
+//                             <BarcodeReader
+//                                 onError={handleError}
+//                                 onScan={handleScan}
+//                                 onStop={() => setIsScanning(false)} // O'qishni to'xtatish
+//                             />
+//                         ) : (
+//                             <Button onClick={() => setIsScanning(true)}>Barcode o'qish</Button>
+//                         )}
+
+//                         <div className='bg-white rounded-xl px-4 py-4 mt-4 shadow-md border-2 '>
+//                             <h1 className='text-xl mb-2 text-gray-600'>
+//                                 Oraliq jami
+//                             </h1>
+//                             <h1 className='text-xl text-gray-600'>0 UZS</h1>
+//                             <h1 className='text-xl mb-2 text-gray-600'>
+//                                 Chegirma
+//                             </h1>
+//                             <h1 className='text-xl text-gray-600'>0 UZS</h1>
+//                             <div className='flex justify-between mt-4 bg-slate-300 rounded-xl px-4 py-3 w-full'>
+//                                 <h1 className='text-xl mb-2 text-white'>
+//                                     To`lash
+//                                 </h1>
+//                                 <h1 className='text-xl text-white'>0 UZS</h1>
+//                             </div>
+//                         </div>
+//                     </div>
+
+//                     <Modal
+//                         title={
+//                             editingProduct
+//                                 ? "Mahsulotni tahrirlash"
+//                                 : "Yangi mahsulot qo'shish"
+//                         }
+//                         open={isAddModalVisible}
+//                         onOk={handleAddNewProduct}
+//                         onCancel={() => {
+//                             setIsAddModalVisible(false);
+//                             setEditingProduct(null); // Modal yopilganda tozalash
+//                         }}>
+//                         <Select
+//                             id='product'
+//                             className='mb-5 w-full'
+//                             value={newProduct.product_id}
+//                             onChange={(value) =>
+//                                 setNewProduct({
+//                                     ...newProduct,
+//                                     product_id: value,
+//                                 })
+//                             }>
+//                             <Option value=''>Kategoriya tanlang</Option>
+//                             {product.map((product) => (
+//                                 <Option key={product.id} value={product.id}>
+//                                     {product.name}
+//                                 </Option>
+//                             ))}
+//                         </Select>
+//                         <Input
+//                             className='mb-5'
+//                             value={newProduct.quantity}
+//                             onChange={handleQuantityChange}
+//                             placeholder='Soni'
+//                         />
+//                     </Modal>
+//                 </div>
+//             )}
+//         </>
+//     );
+// };
+
+// export default NewSales;

@@ -6,10 +6,12 @@ import axios from "axios";
 const AllSales = () => {
     const [orders, setOrders] = useState([]);
     const [products, setProducts] = useState([]);
-    const [clients, setClients] = useState([]); // Mijozlar ro'yxatini saqlash uchun
+    const [clients, setClients] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [ordersPerPage] = useState(8);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [order_client_id, setOrder_client_id] = useState("");
+    const [results, setResults] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
@@ -21,6 +23,7 @@ const AllSales = () => {
                 setOrders(response.data.getAllOrders);
             } catch (error) {
                 console.error("Failed to fetch orders", error);
+                a;
             }
         };
 
@@ -40,7 +43,7 @@ const AllSales = () => {
                 const response = await axios.get(
                     "http://localhost:3001/clients/all"
                 );
-                setClients(response.data.getAllClients); // Mijozlar ma'lumotlarini saqlash
+                setClients(response.data.getAllClients);
             } catch (error) {
                 console.error("Failed to fetch clients", error);
             }
@@ -48,15 +51,36 @@ const AllSales = () => {
 
         fetchOrders();
         fetchProducts();
-        fetchClients(); // Mijozlarni yuklash
+        fetchClients();
     }, []);
+
+    const handleCancelOrder = async (orderId) => {
+        try {
+            // Bekor qilishni API ga yuboramiz
+            const response = await axios.delete(
+                `http://localhost:3001/OrderClient/cancelProduct/${orderId}`
+            );
+            window.location.reload();
+
+            if (response.data && response.data.status === 2) {
+                // Agar status 2 bo'lsa, buyurtmalar ro'yxatida shu buyurtmaning statusini yangilaymiz
+                const updatedOrders = orders.map((order) =>
+                    order.id === orderId ? { ...order, Status: 2 } : order
+                );
+                setOrders(updatedOrders);
+            }
+
+            console.log("Buyurtma bekor qilindi");
+        } catch (error) {
+            console.error("Bekor qilishda xatolik yuz berdi", error);
+        }
+    };
 
     const showOrderDetails = async (orderId) => {
         try {
             const response = await axios.get(
                 `http://localhost:3001/OrderClient/getOrder/${orderId}`
             );
-            console.log(response.data);
             if (response.data) {
                 setSelectedOrder(response.data);
                 setIsModalVisible(true);
@@ -73,9 +97,25 @@ const AllSales = () => {
         setSelectedOrder(null);
     };
 
+    const calculateTotalPrice = () => {
+        if (!selectedOrder || selectedOrder.length === 0) return 0;
+
+        // Raqamlarni yig'amiz va raqam ekanligini tekshiramiz
+        const total = selectedOrder.reduce(
+            (sum, order) => sum + (parseFloat(order.total_price) || 0),
+            0
+        );
+
+        return total;
+    };
+
     const indexOfLastOrder = currentPage * ordersPerPage;
     const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+    const sortedOrders = orders.sort((a, b) => b.id - a.id);
+    const currentOrders = sortedOrders.slice(
+        indexOfFirstOrder,
+        indexOfLastOrder
+    );
 
     const onPageChange = (page) => {
         setCurrentPage(page);
@@ -85,6 +125,7 @@ const AllSales = () => {
         return new Intl.NumberFormat("uz-UZ").format(price);
     };
 
+    // columns o'zgaruvchisini yuqoriga ko'chiramiz
     const columns = [
         {
             title: "ID",
@@ -99,11 +140,6 @@ const AllSales = () => {
                 const product = products.find((p) => p.id === productId);
                 return product ? product.name : "Noma'lum";
             },
-        },
-        {
-            title: "Client nomi",
-            dataIndex: "client_id",
-            key: "client_id",
         },
         {
             title: "Soni",
@@ -150,6 +186,17 @@ const AllSales = () => {
                         Export
                     </Button>
                 </div>
+
+                <div>
+                    <div className='flex'>
+                        <div className='w-[15px] h-[15px] mr-3 bg-green-500 border-2 mt-1'></div>
+                        <p>Sotilgan tovarlar</p>
+                    </div>
+                    <div className='flex'>
+                        <div className='w-[15px] h-[15px] mr-3 bg-red-500 border-2 mt-1 '></div>
+                        <p>Bekor qilingan tovarlar</p>
+                    </div>
+                </div>
             </div>
 
             <br />
@@ -157,10 +204,17 @@ const AllSales = () => {
                 {currentOrders.map((order) => (
                     <div
                         key={order.id}
-                        className='w-full h-[300px] border-2 shadow-lg shadow-black-500/40 rounded-xl flex flex-col mb-4'>
-                        <h1 className='text-green-600 text-xl bg-green-400 bg-opacity-20 text-center rounded-t-[10px]'>
+                        className='w-full h-[300px] border-2 shadow-lg shadow-black-500/40 rounded-xl flex flex-col mb-4'
+                        onClick={() => showOrderDetails(order.id)}>
+                        <h1
+                            className={`text-xl text-center rounded-t-[10px] ${
+                                order.Status === 2
+                                    ? "text-red-600 bg-red-400 bg-opacity-20"
+                                    : "text-green-600 bg-green-400 bg-opacity-20"
+                            }`}>
                             Sotuv
                         </h1>
+
                         <div className='p-4 flex-grow'>
                             <h2 className='text-lg'>Id: {order.id}</h2>
                             <p className='text-lg'>
@@ -173,7 +227,7 @@ const AllSales = () => {
                                 Buyurtma miqdori: {order.total_quantity}
                             </p>
                             <h1 className='text-lg'>
-                                Buyurtmachi :{" "}
+                                Buyurtmachi:{" "}
                                 {clients.find(
                                     (client) => client.id === order.client_id
                                 )?.Full_name || "Noma'lum"}
@@ -185,9 +239,12 @@ const AllSales = () => {
                             </h1>
                             <Button
                                 size='large'
-                                className='bg-sky-500 text-white'
-                                onClick={() => showOrderDetails(order.id)}>
-                                Batafsil
+                                className='bg-red-400 text-white'
+                                onClick={() => handleCancelOrder(order.id)}
+                                disabled={order.Status === 2}>
+                                {order.status === 2
+                                    ? "Bekor qilingan"
+                                    : "Bekor qilish"}
                             </Button>
                         </div>
                     </div>
@@ -207,13 +264,24 @@ const AllSales = () => {
                 title='Buyurtma tafsilotlari'
                 open={isModalVisible}
                 onCancel={handleCloseModal}
-                width={800}
-                footer={null}>
+                width={800}>
                 {selectedOrder ? (
                     <Table
                         columns={columns}
                         dataSource={selectedOrder}
                         rowKey='id'
+                        pagination={{
+                            pageSize: 5,
+                            showTotal: (total) => (
+                                <div className=''>
+                                    <h1 className='text-xl'>
+                                        Umumiy narxi:{" "}
+                                        {formatPrice(calculateTotalPrice())}{" "}
+                                        so'm
+                                    </h1>
+                                </div>
+                            ),
+                        }}
                     />
                 ) : (
                     <p>Ma'lumotlar topilmadi.</p>
